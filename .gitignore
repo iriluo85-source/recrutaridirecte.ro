@@ -53,3 +53,6 @@ next-env.d.ts
 *.log
 /dev-stdout.log
 /dev-stderr.log
+
+# lock generat pe Windows -> lasam Railway sa foloseasca npm install (cross-platform)
+package-lock.json
