@@ -12,6 +12,19 @@ export default function ContactForm() {
     undefined
   );
 
+  // Confirmare clară după trimitere reușită (înlocuiește formularul).
+  if (state?.success) {
+    return (
+      <div className="mt-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-5 py-8 text-center">
+        <div className="text-4xl" aria-hidden="true">✅</div>
+        <p className="mt-3 text-lg font-semibold text-emerald-600 dark:text-emerald-400">
+          {t("successTitle")}
+        </p>
+        <p className="mt-1 text-sm text-muted">{t("success")}</p>
+      </div>
+    );
+  }
+
   return (
     <form action={action} className="mt-4 flex flex-col gap-3">
       <label className="flex flex-col gap-1">
@@ -36,7 +49,6 @@ export default function ContactForm() {
         <textarea name="mesaj" rows={5} required className="input" />
       </label>
       {state?.error && <p className="text-sm text-red-500">{state.error}</p>}
-      {state?.success && <p className="text-sm text-emerald-500">{t("success")}</p>}
       <button type="submit" disabled={pending} className="btn-primary self-start">
         {pending ? tc("sending") : t("send")}
       </button>

@@ -875,7 +875,8 @@
     "email": "Email",
     "message": "Message",
     "send": "Send message",
-    "success": "Your message has been sent. Thank you!",
+    "successTitle": "Message sent successfully!",
+    "success": "Your message has been sent. We'll reply within 1-2 business days.",
     "errorInvalid": "Check your details: name, a valid email and a message of at least 10 characters.",
     "errorSend": "The message could not be sent. Please try again later."
   },

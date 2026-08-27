@@ -875,7 +875,8 @@
     "email": "Email",
     "message": "Mesaj",
     "send": "Trimite mesajul",
-    "success": "Mesajul a fost trimis. Mulțumim!",
+    "successTitle": "Mesaj trimis cu succes!",
+    "success": "Mesajul a fost trimis. Îți răspundem în 1-2 zile lucrătoare.",
     "errorInvalid": "Verifică datele: numele, un email valid și un mesaj de cel puțin 10 caractere.",
     "errorSend": "Mesajul nu a putut fi trimis. Încearcă din nou mai târziu."
   },
