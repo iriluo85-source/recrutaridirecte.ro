@@ -205,6 +205,10 @@ export default async function AbonamentePage({
                   <span className="btn-secondary pointer-events-none w-full justify-center opacity-70">
                     {t("currentPlan")}
                   </span>
+                ) : plan.tip !== "FREE" && !PLATI_ACTIVE ? (
+                  <span className="btn-secondary pointer-events-none w-full justify-center opacity-60">
+                    {t("comingSoon")}
+                  </span>
                 ) : esteVizitator ? (
                   <Link href="/inregistrare" className="btn-secondary w-full justify-center">
                     {t("needAccount")}
@@ -215,17 +219,13 @@ export default async function AbonamentePage({
                       {t("downgradeFree")}
                     </button>
                   </form>
-                ) : PLATI_ACTIVE ? (
+                ) : (
                   <Link
                     href={`/abonamente/plata?tip=${plan.tip}`}
                     className={`w-full justify-center ${plan.evidentiat ? "btn-primary" : "btn-secondary"}`}
                   >
                     {t("choose")}
                   </Link>
-                ) : (
-                  <span className="btn-secondary pointer-events-none w-full justify-center opacity-60">
-                    {t("comingSoon")}
-                  </span>
                 )}
               </div>
             </div>
