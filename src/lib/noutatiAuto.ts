@@ -23,8 +23,6 @@ const SURSE: Sursa[] = [
   { nume: "StartupCafe", url: "https://startupcafe.ro/feed", categorie: "Antreprenoriat" },
   { nume: "Curs de Guvernare", url: "https://cursdeguvernare.ro/feed", categorie: "Politici economice" },
   { nume: "Juridice.ro", url: "https://www.juridice.ro/feed", categorie: "Legislație" },
-  { nume: "HotNews", url: "https://hotnews.ro/feed", categorie: "Actualitate" },
-  { nume: "Digi24", url: "https://www.digi24.ro/rss", categorie: "Actualitate" },
 ];
 
 const UA =
