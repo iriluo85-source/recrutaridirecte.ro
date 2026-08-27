@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { gasestePlan } from "@/lib/planuri";
+import { PLATI_ACTIVE } from "@/lib/netopia";
 import { activeazaAbonamentSimulareAction } from "../actions";
 
 export async function generateMetadata() {
@@ -19,6 +20,9 @@ export default async function PlataPage({
   const session = await auth();
   if (!session?.user) redirect("/login");
   if (!session.user.role) redirect("/alege-rol");
+
+  // Cât timp plățile reale (Netopia) nu sunt active, checkout-ul demo nu e accesibil.
+  if (!PLATI_ACTIVE) redirect("/abonamente");
 
   const { tip } = await searchParams;
   const plan = gasestePlan(session.user.role, tip ?? "");

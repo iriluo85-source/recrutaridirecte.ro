@@ -11,6 +11,7 @@ import {
   PERIOADE_ABONAMENT,
 } from "@/lib/planuri";
 import { anuleazaAbonamentAction } from "./actions";
+import { PLATI_ACTIVE } from "@/lib/netopia";
 
 export async function generateMetadata() {
   const t = await getTranslations("plans");
@@ -214,13 +215,17 @@ export default async function AbonamentePage({
                       {t("downgradeFree")}
                     </button>
                   </form>
-                ) : (
+                ) : PLATI_ACTIVE ? (
                   <Link
                     href={`/abonamente/plata?tip=${plan.tip}`}
                     className={`w-full justify-center ${plan.evidentiat ? "btn-primary" : "btn-secondary"}`}
                   >
                     {t("choose")}
                   </Link>
+                ) : (
+                  <span className="btn-secondary pointer-events-none w-full justify-center opacity-60">
+                    {t("comingSoon")}
+                  </span>
                 )}
               </div>
             </div>
