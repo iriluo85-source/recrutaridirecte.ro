@@ -122,3 +122,21 @@ export async function sendEmail({
   console.warn(`[email] Niciun transport configurat (RESEND_API_KEY / GMAIL_*) — nu trimit "${subject}" către ${to}.`);
   return false;
 }
+
+// Email de bun venit trimis la crearea unui cont (confirmă că înregistrarea a reușit).
+export async function trimiteEmailBunVenit(to: string): Promise<boolean> {
+  const url = process.env.APP_URL || "https://www.recrutaridirecte.ro";
+  const html = `
+  <div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#111">
+    <h2 style="margin:0 0 12px">Bine ai venit la Recrutare Directă! 🎉</h2>
+    <p>Salut,</p>
+    <p><strong>Contul tău a fost creat cu succes.</strong> Ne bucurăm că ești aici!</p>
+    <p>Recrutare Directă conectează candidații direct cu angajatorii — fără intermediari și fără anunțuri.</p>
+    <p><strong>Următorul pas:</strong> completează-ți profilul ca să profiți la maximum.</p>
+    <p style="margin:20px 0">
+      <a href="${url}" style="background:#16a34a;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;display:inline-block">Intră în cont</a>
+    </p>
+    <p style="color:#888;font-size:12px;margin-top:24px">Dacă nu tu ai creat acest cont, poți ignora acest email.</p>
+  </div>`;
+  return sendEmail({ to, subject: "Bine ai venit la Recrutare Directă! 🎉", html });
+}

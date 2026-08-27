@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { authConfig } from "@/auth.config";
 import { esteAdminEmail } from "@/lib/admin";
+import { trimiteEmailBunVenit } from "@/lib/email";
 
 const googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
 // Cerem lungime plauzibilă (nu doar „non-gol"), ca să nu apară butonul Microsoft
@@ -99,6 +100,8 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           let dbUser = await prisma.user.findUnique({ where: { email } });
           if (!dbUser) {
             dbUser = await prisma.user.create({ data: { email, role: null, emailVerificat: true } });
+            // cont nou prin OAuth (Google/Microsoft) → email de bun venit (ne-blocant)
+            trimiteEmailBunVenit(email).catch(() => {});
           } else if (!dbUser.emailVerificat) {
             // dacă Google/Microsoft a confirmat deja emailul, îl considerăm verificat și la noi
             dbUser = await prisma.user.update({ where: { id: dbUser.id }, data: { emailVerificat: true } });
