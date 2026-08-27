@@ -1,0 +1,19 @@
+name: Import noutati zilnic
+
+# Rulează zilnic dimineața (07:00 UTC ≈ 09:00-10:00 în România) + manual din tab-ul Actions.
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cheamă ruta de import
+        run: |
+          curl -fsS --max-time 60 -X GET \
+            "https://www.recrutaridirecte.ro/api/cron/noutati" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
+          echo ""
+          echo "Import declanșat."
