@@ -751,7 +751,9 @@
     "contactLink": "Contact",
     "faqLink": "Întrebări frecvente",
     "testimonialsLink": "Testimoniale",
-    "newsLink": "Noutăți"
+    "newsLink": "Noutăți",
+    "deliveryLink": "Livrare",
+    "returnLink": "Retur și anulare"
   },
   "nav": {
     "login": "Autentificare",

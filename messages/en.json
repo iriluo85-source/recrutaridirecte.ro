@@ -751,7 +751,9 @@
     "contactLink": "Contact",
     "faqLink": "FAQ",
     "testimonialsLink": "Testimonials",
-    "newsLink": "News"
+    "newsLink": "News",
+    "deliveryLink": "Delivery",
+    "returnLink": "Returns & cancellation"
   },
   "nav": {
     "login": "Sign in",

@@ -760,3 +760,207 @@ export function getTermeni(locale: string): LegalDoc {
 export function getConfidentialitate(locale: string): LegalDoc {
   return locale === "en" ? confidEn : confidRo;
 }
+
+// ————————————————————————————————————————————————————————————————
+// LIVRARE (servicii digitale)
+// ————————————————————————————————————————————————————————————————
+
+const livrareRo: LegalDoc = {
+  title: "Livrare",
+  updated: `Ultima actualizare: ${C.dataActualizarii}`,
+  intro: `${C.numeSite} oferă exclusiv servicii digitale (acces la platforma online și la funcțiile abonamentelor). Nu comercializăm și nu livrăm produse fizice, deci nu se aplică transport sau costuri de livrare.`,
+  sections: [
+    {
+      title: "1. Modul de livrare",
+      blocks: [
+        {
+          kind: "p",
+          text: `Serviciile se livrează electronic, prin activarea accesului în contul tău de pe ${C.domeniu}. Nu există expediere fizică și nu se percep costuri de transport.`,
+        },
+      ],
+    },
+    {
+      title: "2. Termenul de livrare",
+      blocks: [
+        {
+          kind: "box",
+          variant: "key",
+          text: `Accesul la abonamentul plătit se activează automat și imediat după confirmarea plății (de regulă în câteva secunde, maximum câteva minute).`,
+        },
+        {
+          kind: "p",
+          text: `Factura fiscală se emite electronic și se trimite pe adresa de email asociată contului.`,
+        },
+      ],
+    },
+    {
+      title: "3. Dacă accesul nu se activează",
+      blocks: [
+        {
+          kind: "p",
+          text: `Dacă în câteva minute de la plată accesul nu a fost activat, scrie-ne la ${C.emailContact} și rezolvăm rapid, fără costuri suplimentare.`,
+        },
+      ],
+    },
+  ],
+  footer: `Pentru orice întrebare legată de livrare, ne poți contacta la ${C.emailContact}.`,
+};
+
+const livrareEn: LegalDoc = {
+  title: "Delivery",
+  updated: `Last updated: ${C.dataActualizarii}`,
+  intro: `${C.numeSite} provides digital services only (access to the online platform and subscription features). We do not sell or ship physical products, so no shipping or delivery costs apply.`,
+  sections: [
+    {
+      title: "1. Delivery method",
+      blocks: [
+        {
+          kind: "p",
+          text: `Services are delivered electronically, by activating access in your account on ${C.domeniu}. There is no physical shipping and no transport costs.`,
+        },
+      ],
+    },
+    {
+      title: "2. Delivery time",
+      blocks: [
+        {
+          kind: "box",
+          variant: "key",
+          text: `Access to a paid subscription is activated automatically and immediately after the payment is confirmed (usually within seconds, at most a few minutes).`,
+        },
+        {
+          kind: "p",
+          text: `The fiscal invoice is issued electronically and sent to the email address associated with the account.`,
+        },
+      ],
+    },
+    {
+      title: "3. If access is not activated",
+      blocks: [
+        {
+          kind: "p",
+          text: `If access has not been activated within a few minutes of payment, write to us at ${C.emailContact} and we will resolve it quickly, at no extra cost.`,
+        },
+      ],
+    },
+  ],
+  footer: `For any delivery-related questions, contact us at ${C.emailContact}.`,
+};
+
+// ————————————————————————————————————————————————————————————————
+// RETUR ȘI ANULARE
+// ————————————————————————————————————————————————————————————————
+
+const returRo: LegalDoc = {
+  title: "Retur și anulare",
+  updated: `Ultima actualizare: ${C.dataActualizarii}`,
+  intro: `Deoarece ${C.numeSite} oferă servicii digitale (abonamente), regulile de mai jos descriu anularea abonamentului, dreptul legal de retragere și modul de rambursare.`,
+  sections: [
+    {
+      title: "1. Anularea abonamentului",
+      blocks: [
+        {
+          kind: "p",
+          text: `Îți poți anula abonamentul oricând, din pagina Abonamente sau din Setări. La anulare, abonamentul nu se mai reînnoiește automat, iar accesul rămâne activ până la finalul perioadei deja plătite.`,
+        },
+      ],
+    },
+    {
+      title: "2. Dreptul de retragere (14 zile)",
+      blocks: [
+        {
+          kind: "p",
+          text: `Conform OUG nr. 34/2014, ai dreptul să te retragi din contractul încheiat la distanță în termen de 14 zile de la data achiziției, fără a fi nevoie să justifici decizia.`,
+        },
+        {
+          kind: "box",
+          variant: "info",
+          text: `Excepție (servicii digitale): dacă ai solicitat expres începerea furnizării serviciului înainte de expirarea celor 14 zile și ai confirmat că îți pierzi dreptul de retragere pentru partea deja prestată, retragerea nu se mai aplică pentru acea parte, conform legii.`,
+        },
+      ],
+    },
+    {
+      title: "3. Termenul și modul de rambursare",
+      blocks: [
+        {
+          kind: "p",
+          text: `Dacă retragerea este aplicabilă, îți rambursăm sumele în cel mult 14 zile de la data la care ne-ai comunicat decizia, folosind aceeași metodă de plată (card, procesat prin ${C.procesatorPlati}), fără costuri suplimentare pentru tine.`,
+        },
+      ],
+    },
+    {
+      title: "4. Cum ceri anularea sau returul",
+      blocks: [
+        {
+          kind: "ul",
+          items: [
+            `Anularea abonamentului: din pagina Abonamente sau din Setări → Abonament.`,
+            `Cerere de retragere/rambursare: trimite un email la ${C.emailContact}, menționând datele contului. Îți răspundem în cel mult 2 zile lucrătoare.`,
+          ],
+        },
+      ],
+    },
+  ],
+  footer: `Pentru orice întrebare legată de retur sau anulare, ne poți contacta la ${C.emailContact}.`,
+};
+
+const returEn: LegalDoc = {
+  title: "Returns & cancellation",
+  updated: `Last updated: ${C.dataActualizarii}`,
+  intro: `Because ${C.numeSite} provides digital services (subscriptions), the rules below describe subscription cancellation, the legal right of withdrawal, and how refunds work.`,
+  sections: [
+    {
+      title: "1. Cancelling your subscription",
+      blocks: [
+        {
+          kind: "p",
+          text: `You can cancel your subscription at any time, from the Subscriptions page or from Settings. Upon cancellation, the subscription no longer renews automatically, and access remains active until the end of the period already paid for.`,
+        },
+      ],
+    },
+    {
+      title: "2. Right of withdrawal (14 days)",
+      blocks: [
+        {
+          kind: "p",
+          text: `Under Romanian law (OUG no. 34/2014, implementing Directive 2011/83/EU), you have the right to withdraw from the distance contract within 14 days of purchase, without giving a reason.`,
+        },
+        {
+          kind: "box",
+          variant: "info",
+          text: `Exception (digital services): if you expressly requested that the service begin before the 14 days expire and confirmed that you lose your right of withdrawal for the part already performed, withdrawal no longer applies to that part, as provided by law.`,
+        },
+      ],
+    },
+    {
+      title: "3. Refund time and method",
+      blocks: [
+        {
+          kind: "p",
+          text: `Where withdrawal applies, we refund the amounts within at most 14 days of the date you informed us of your decision, using the same payment method (card, processed via ${C.procesatorPlati}), at no additional cost to you.`,
+        },
+      ],
+    },
+    {
+      title: "4. How to request cancellation or a refund",
+      blocks: [
+        {
+          kind: "ul",
+          items: [
+            `Cancel a subscription: from the Subscriptions page or Settings → Subscription.`,
+            `Withdrawal/refund request: email us at ${C.emailContact}, including your account details. We reply within 2 business days.`,
+          ],
+        },
+      ],
+    },
+  ],
+  footer: `For any returns or cancellation questions, contact us at ${C.emailContact}.`,
+};
+
+export function getLivrare(locale: string): LegalDoc {
+  return locale === "en" ? livrareEn : livrareRo;
+}
+
+export function getRetur(locale: string): LegalDoc {
+  return locale === "en" ? returEn : returRo;
+}

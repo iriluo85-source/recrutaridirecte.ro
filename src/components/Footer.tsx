@@ -30,6 +30,23 @@ export default async function Footer() {
           <Link href="/confidentialitate" className="hover:text-foreground hover:underline">
             {t("privacyLink")}
           </Link>
+          <Link href="/livrare" className="hover:text-foreground hover:underline">
+            {t("deliveryLink")}
+          </Link>
+          <Link href="/retur" className="hover:text-foreground hover:underline">
+            {t("returnLink")}
+          </Link>
+        </div>
+      </div>
+      <div className="mx-auto flex max-w-5xl items-center justify-center px-6 pb-6">
+        {/* Sigla oficială NETOPIA (Visa/Mastercard) — componenta din contul Netopia, cerută pentru aprobare. */}
+        <div className="rounded-lg bg-white p-2 shadow-sm">
+          <iframe
+            src="https://mny.ro/npId.html?color=%23ffffff&version=vertical&secret=168387"
+            title="NETOPIA Payments"
+            loading="lazy"
+            style={{ border: "none", width: 100, height: 80, display: "block" }}
+          />
         </div>
       </div>
     </footer>
