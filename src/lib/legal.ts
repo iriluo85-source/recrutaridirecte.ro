@@ -59,6 +59,15 @@ const termeniRo: LegalDoc = {
           kind: "p",
           text: `Platforma ${C.numeSite} este administrată de ${firma}, cu sediul în ${C.sediu}, înregistrată la Registrul Comerțului sub nr. ${C.nrRegCom}, CUI ${C.cui}, email de contact: ${C.emailContact} (informații furnizate conform Legii nr. 365/2002 privind comerțul electronic).`,
         },
+        {
+          kind: "p",
+          text: `Serviciile plătite (abonamentele) sunt comercializate și facturate direct de ${firma}. Aceasta vinde în nume propriu propriile servicii de abonament (nu servicii ale unor terți) și emite factura fiscală pentru fiecare plată.`,
+        },
+        {
+          kind: "box",
+          variant: "key",
+          text: `Rolul companiei: în raport cu serviciile plătite, ${firma} acționează în calitate de COMERCIANT — vinde direct, în nume propriu, abonamentele oferite pe platformă și emite factura. Nu acționează ca marketplace, intermediar, distribuitor sau agent pentru servicii ale unor terți.`,
+        },
       ],
     },
     {
@@ -236,6 +245,15 @@ const termeniEn: LegalDoc = {
         {
           kind: "p",
           text: `The ${C.numeSite} platform is operated by ${firma}, headquartered at ${C.sediu}, registered with the Trade Register under no. ${C.nrRegCom}, tax ID ${C.cui}, contact email: ${C.emailContact} (information provided under Romanian Law no. 365/2002 on electronic commerce).`,
+        },
+        {
+          kind: "p",
+          text: `The paid services (subscriptions) are sold and invoiced directly by ${firma}. It sells its own subscription services in its own name (not third-party services) and issues a fiscal invoice for each payment.`,
+        },
+        {
+          kind: "box",
+          variant: "key",
+          text: `Company role: with respect to the paid services, ${firma} acts as the MERCHANT — it sells the subscriptions offered on the platform directly and in its own name, and issues the invoice. It does not act as a marketplace, intermediary, distributor, or agent for third-party services.`,
         },
       ],
     },
