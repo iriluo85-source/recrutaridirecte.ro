@@ -88,7 +88,7 @@ export default async function CvPrintabilPage() {
             <div>
               <dt className="text-slate-500">{t("labelExperience")}</dt>
               <dd className="text-slate-800">
-                {profile.aniExperienta} {tc("years")}
+                {tc("yearsCount", { count: profile.aniExperienta ?? 0 })}
               </dd>
             </div>
             <div>

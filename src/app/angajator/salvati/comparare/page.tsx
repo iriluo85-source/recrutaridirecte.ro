@@ -35,7 +35,7 @@ export default async function ComparareCandidatiPage() {
   // fiecare rând = un atribut; coloanele = candidații
   const randuri: { label: string; value: (c: (typeof candidati)[number]) => string }[] = [
     { label: t("candidate.location"), value: (c) => c.locatie + (c.remote ? ` · ${tc("remoteOk")}` : "") },
-    { label: t("candidate.experience"), value: (c) => `${c.aniExperienta} ${tc("years")}` },
+    { label: t("candidate.experience"), value: (c) => tc("yearsCount", { count: c.aniExperienta ?? 0 }) },
     { label: t("candidate.availability"), value: (c) => tc("disponibilitate." + c.disponibilitate) },
     {
       label: t("candidate.salaryExpectations"),

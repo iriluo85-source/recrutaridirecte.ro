@@ -182,7 +182,7 @@ export default async function CandidatProfilPage() {
           </div>
           <div>
             <dt className="text-muted">{t("experience")}</dt>
-            <dd>{profile.aniExperienta} {tc("years")}</dd>
+            <dd>{tc("yearsCount", { count: profile.aniExperienta ?? 0 })}</dd>
           </div>
           <div>
             <dt className="text-muted">{t("availability")}</dt>
@@ -199,7 +199,7 @@ export default async function CandidatProfilPage() {
           {profile.varsta != null && (
             <div>
               <dt className="text-muted">{t("age")}</dt>
-              <dd>{profile.varsta} {tc("years")}</dd>
+              <dd>{tc("yearsCount", { count: profile.varsta ?? 0 })}</dd>
             </div>
           )}
           {profile.sex && (

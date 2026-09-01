@@ -86,7 +86,7 @@ export default async function CandidatDetaliuPage({
           </div>
           <div>
             <dt className="text-muted">{t("candidate.experience")}</dt>
-            <dd>{candidat.aniExperienta} {tc("years")}</dd>
+            <dd>{tc("yearsCount", { count: candidat.aniExperienta ?? 0 })}</dd>
           </div>
           <div>
             <dt className="text-muted">{t("candidate.availability")}</dt>
