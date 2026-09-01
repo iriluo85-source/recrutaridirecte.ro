@@ -655,6 +655,7 @@
     "noMessages": "No messages yet.",
     "placeholder": "Write a message...",
     "send": "Send",
+    "attach": "Attach file",
     "sendFailed": "Sending failed.",
     "attachmentAlt": "Attachment",
     "activNow": "Active now",
