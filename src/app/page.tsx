@@ -36,10 +36,11 @@ export default async function Home({
   const contSters = (await searchParams)["cont-sters"] === "1";
   const slide = alegeSlideAleator();
 
-  // numărători live pentru banda de social proof (se actualizează singure)
+  // numărători live pentru banda de social proof (se actualizează singure).
+  // Numărăm toate conturile înregistrate pe rol (nu doar cele cu profil completat).
   const [candidatiCount, companiiCount] = await Promise.all([
-    prisma.candidateProfile.count(),
-    prisma.employerProfile.count(),
+    prisma.user.count({ where: { role: "CANDIDATE" } }),
+    prisma.user.count({ where: { role: "EMPLOYER" } }),
   ]);
   const candidatiAfisat = pestePrag(candidatiCount);
   const companiiAfisat = pestePrag(companiiCount);
