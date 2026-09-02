@@ -1,7 +1,9 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
+import { firmaVerificata } from "@/lib/planuri";
 import PageBanner from "@/components/PageBanner";
 import Avatar from "@/components/Avatar";
+import VerifiedBadge from "@/components/VerifiedBadge";
 
 export async function generateMetadata() {
   const t = await getTranslations("companies");
@@ -11,6 +13,7 @@ export async function generateMetadata() {
 export default async function CompaniiPage() {
   const t = await getTranslations("companies");
   const tp = await getTranslations("posts");
+  const locale = await getLocale();
 
   const companii = await prisma.employerProfile.findMany({
     orderBy: { updatedAt: "desc" },
@@ -22,6 +25,7 @@ export default async function CompaniiPage() {
       marimeCompanie: true,
       descriere: true,
       posturi: { where: { activ: true }, select: { id: true } },
+      user: { select: { abonamentTip: true, isAdmin: true, email: true } },
     },
   });
 
@@ -44,7 +48,10 @@ export default async function CompaniiPage() {
                 <div className="flex items-center gap-3">
                   <Avatar name={c.numeCompanie} size={44} />
                   <div className="min-w-0">
-                    <p className="truncate font-medium">{c.numeCompanie}</p>
+                    <p className="flex items-center gap-1 font-medium">
+                      <span className="truncate">{c.numeCompanie}</span>
+                      {firmaVerificata(c.user) && <VerifiedBadge locale={locale} className="h-4 w-4" />}
+                    </p>
                     <p className="truncate text-xs text-muted">
                       {[c.industrie, c.locatie].filter(Boolean).join(" · ") || " "}
                     </p>

@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { domeniuDupaSlug } from "@/lib/domenii";
+import { firmaVerificata } from "@/lib/planuri";
 import PageBanner from "@/components/PageBanner";
+import VerifiedBadge from "@/components/VerifiedBadge";
 
 export default async function CompanieDetaliuPage({
   params,
@@ -14,6 +16,7 @@ export default async function CompanieDetaliuPage({
   const tp = await getTranslations("posts");
   const th = await getTranslations("home");
   const tc = await getTranslations("common");
+  const locale = await getLocale();
   const { id } = await params;
   const session = await auth();
 
@@ -29,7 +32,7 @@ export default async function CompanieDetaliuPage({
 
   const companie = await prisma.employerProfile.findUnique({
     where: { id },
-    include: { user: { select: { telefon: true } } },
+    include: { user: { select: { telefon: true, abonamentTip: true, isAdmin: true, email: true } } },
   });
   if (!companie) notFound();
 
@@ -43,6 +46,7 @@ export default async function CompanieDetaliuPage({
       <PageBanner
         image="/images/hero-office.jpg"
         title={companie.numeCompanie}
+        titleBadge={firmaVerificata(companie.user) ? <VerifiedBadge locale={locale} /> : null}
         subtitle={[companie.industrie, companie.locatie].filter(Boolean).join(" · ") || undefined}
         maxWidthClass="max-w-2xl"
       />

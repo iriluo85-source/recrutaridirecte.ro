@@ -5,7 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { domeniuDupaSlug } from "@/lib/domenii";
 import PageBanner from "@/components/PageBanner";
 import PlanBadge from "@/components/PlanBadge";
-import { abonamentEfectiv } from "@/lib/planuri";
+import VerifiedBadge from "@/components/VerifiedBadge";
+import { abonamentEfectiv, firmaVerificata } from "@/lib/planuri";
 
 export default async function AngajatorProfilPage() {
   const session = await auth();
@@ -47,7 +48,12 @@ export default async function AngajatorProfilPage() {
         image="/images/hero-office.jpg"
         eyebrow={t("profileView.title")}
         title={companie.numeCompanie}
-        titleBadge={<PlanBadge role="EMPLOYER" tip={abonamentEfectiv(user)} locale={locale} />}
+        titleBadge={
+          <span className="inline-flex items-center gap-2">
+            <PlanBadge role="EMPLOYER" tip={abonamentEfectiv(user)} locale={locale} />
+            {firmaVerificata(user) && <VerifiedBadge locale={locale} />}
+          </span>
+        }
         subtitle={[companie.industrie, companie.locatie].filter(Boolean).join(" · ") || undefined}
         maxWidthClass="max-w-xl"
       >

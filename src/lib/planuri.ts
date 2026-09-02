@@ -159,6 +159,14 @@ export function abonamentEfectiv(
   return (user.abonamentTip as PlanTip | null) ?? null;
 }
 
+// O firmă e „verificată" (bifă) dacă are — efectiv — abonament Nelimitat.
+// Adminii intră automat (au Nelimitat efectiv prin abonamentEfectiv).
+export function firmaVerificata(
+  user: { isAdmin?: boolean | null; email?: string | null; abonamentTip?: string | null } | null | undefined
+): boolean {
+  return abonamentEfectiv(user) === "UNLIMITED";
+}
+
 // Câte CV-uri poate încărca un candidat, în funcție de abonament.
 export function limitaCv(tip: string | null | undefined): number {
   if (tip === "UNLIMITED") return Infinity;
