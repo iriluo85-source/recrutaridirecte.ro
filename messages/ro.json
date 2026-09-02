@@ -816,6 +816,28 @@
       "SUB_O_LUNA": "Sub o lună",
       "PESTE_O_LUNA": "Peste o lună"
     },
+    "studii": {
+      "title": "Studii",
+      "level": "Nivel de studii",
+      "field": "Specializare",
+      "institution": "Instituție",
+      "year": "An absolvire",
+      "status": "Status",
+      "fieldPlaceholder": "ex: Automatică și calculatoare",
+      "institutionPlaceholder": "ex: Universitatea Politehnica Timișoara",
+      "nivel": {
+        "LICEU": "Liceu",
+        "POSTLICEAL": "Școală postliceală",
+        "LICENTA": "Facultate (Licență)",
+        "MASTER": "Master",
+        "DOCTORAT": "Doctorat",
+        "ALTELE": "Altele"
+      },
+      "stare": {
+        "IN_CURS": "În curs",
+        "FINALIZAT": "Finalizate"
+      }
+    },
     "searchConversations": "Caută conversații...",
     "noSearchResults": "Nicio conversație găsită."
   },

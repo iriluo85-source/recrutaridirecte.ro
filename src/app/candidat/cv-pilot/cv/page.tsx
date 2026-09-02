@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { formatStudii } from "@/lib/studii";
 import PrintButton from "../PrintButton";
 
 export async function generateMetadata() {
@@ -25,6 +26,8 @@ export default async function CvPrintabilPage() {
     include: { skills: { include: { skill: true } } },
   });
   if (!profile) redirect("/candidat/cv-pilot");
+
+  const studii = formatStudii(profile, tc);
 
   const contact = [user?.email, user?.telefon, profile.locatie]
     .filter(Boolean)
@@ -77,6 +80,19 @@ export default async function CvPrintabilPage() {
                 </span>
               ))}
             </div>
+          </section>
+        )}
+
+        {studii && (
+          <section className="mt-6">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-700">
+              {tc("studii.title")}
+            </h2>
+            <p className="mt-2 text-sm text-slate-800">
+              <span className="font-medium">{studii.nivel}</span>
+              {studii.status && <span className="text-slate-500"> — {studii.status}</span>}
+            </p>
+            {studii.detalii && <p className="text-sm text-slate-600">{studii.detalii}</p>}
           </section>
         )}
 

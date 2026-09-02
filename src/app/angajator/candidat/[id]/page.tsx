@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import PageBanner from "@/components/PageBanner";
 import PhotoZoom from "@/components/PhotoZoom";
 import SaveCandidateButton from "@/components/SaveCandidateButton";
+import { formatStudii } from "@/lib/studii";
 import InterestForm from "./InterestForm";
 import RecordProfileView from "./RecordProfileView";
 
@@ -28,6 +29,8 @@ export default async function CandidatDetaliuPage({
   });
 
   if (!candidat) notFound();
+
+  const studii = formatStudii(candidat, tc);
 
   const session = await auth();
   const employer = await prisma.employerProfile.findUnique({
@@ -114,6 +117,21 @@ export default async function CandidatDetaliuPage({
             {candidat.skills.map((s) => s.skill.nume).join(", ") || "-"}
           </p>
         </div>
+
+        {studii && (
+          <div className="mt-6">
+            <h2 className="field-label">{tc("studii.title")}</h2>
+            <p className="mt-1 flex flex-wrap items-center gap-2">
+              <span className="font-medium">{studii.nivel}</span>
+              {studii.status && (
+                <span className="rounded-full bg-accent-secondary px-2 py-0.5 text-xs font-medium text-accent-secondary-foreground">
+                  {studii.status}
+                </span>
+              )}
+            </p>
+            {studii.detalii && <p className="mt-0.5 text-sm text-muted">{studii.detalii}</p>}
+          </div>
+        )}
 
         {candidat.bio && (
           <div className="mt-6">

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import PageBanner from "@/components/PageBanner";
 import PlanBadge from "@/components/PlanBadge";
 import PhotoZoom from "@/components/PhotoZoom";
+import { formatStudii } from "@/lib/studii";
 
 export default async function CandidatProfilPage() {
   const t = await getTranslations("candidate");
@@ -89,6 +90,8 @@ export default async function CandidatProfilPage() {
       </main>
     );
   }
+
+  const studii = formatStudii(profile, tc);
 
   return (
     <main className="flex-1">
@@ -222,6 +225,21 @@ export default async function CandidatProfilPage() {
             {profile.skills.map((s) => s.skill.nume).join(", ") || "-"}
           </p>
         </div>
+
+        {studii && (
+          <div className="mt-6">
+            <h2 className="field-label">{tc("studii.title")}</h2>
+            <p className="mt-1 flex flex-wrap items-center gap-2">
+              <span className="font-medium">{studii.nivel}</span>
+              {studii.status && (
+                <span className="rounded-full bg-accent-secondary px-2 py-0.5 text-xs font-medium text-accent-secondary-foreground">
+                  {studii.status}
+                </span>
+              )}
+            </p>
+            {studii.detalii && <p className="mt-0.5 text-sm text-muted">{studii.detalii}</p>}
+          </div>
+        )}
 
         {profile.bio && (
           <div className="mt-6">

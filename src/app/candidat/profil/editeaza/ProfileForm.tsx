@@ -8,6 +8,8 @@ import { pentruInputData } from "@/lib/varsta";
 
 const DISPONIBILITATE_VALUES = ["IMEDIATA", "SUB_O_LUNA", "PESTE_O_LUNA"] as const;
 const SEX_VALUES = ["Masculin", "Feminin", "Altul"] as const;
+const STUDII_NIVEL_VALUES = ["LICEU", "POSTLICEAL", "LICENTA", "MASTER", "DOCTORAT", "ALTELE"] as const;
+const STUDII_STATUS_VALUES = ["IN_CURS", "FINALIZAT"] as const;
 
 type ProfileData = {
   id: string;
@@ -21,6 +23,11 @@ type ProfileData = {
   salariuMaxim: number | null;
   dataNasterii: Date | string | null;
   sex: string | null;
+  studiiNivel: string | null;
+  studiiSpecializare: string | null;
+  studiiInstitutie: string | null;
+  studiiAn: number | null;
+  studiiStatus: string | null;
   pozaFisier: string | null;
   disponibilitate: string;
   skills: { skill: { nume: string } }[];
@@ -146,6 +153,71 @@ export default function ProfileForm({ profile }: { profile: ProfileData | null }
           </select>
         </label>
       </div>
+
+      <fieldset className="flex flex-col gap-4 rounded-lg border border-line p-4">
+        <legend className="field-label px-1">
+          {tc("studii.title")} <span className="text-muted">({t("optional")})</span>
+        </legend>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="flex flex-col gap-1">
+            <span className="field-label">{tc("studii.level")}</span>
+            <select name="studiiNivel" defaultValue={profile?.studiiNivel ?? ""} className="input">
+              <option value="">{tc("unspecified")}</option>
+              {STUDII_NIVEL_VALUES.map((v) => (
+                <option key={v} value={v}>
+                  {tc("studii.nivel." + v)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="field-label">{tc("studii.status")}</span>
+            <select
+              name="studiiStatus"
+              defaultValue={profile?.studiiStatus ?? "FINALIZAT"}
+              className="input"
+            >
+              {STUDII_STATUS_VALUES.map((v) => (
+                <option key={v} value={v}>
+                  {tc("studii.stare." + v)}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <label className="flex flex-col gap-1">
+          <span className="field-label">{tc("studii.field")}</span>
+          <input
+            name="studiiSpecializare"
+            defaultValue={profile?.studiiSpecializare ?? ""}
+            placeholder={tc("studii.fieldPlaceholder")}
+            className="input"
+          />
+        </label>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="flex flex-col gap-1">
+            <span className="field-label">{tc("studii.institution")}</span>
+            <input
+              name="studiiInstitutie"
+              defaultValue={profile?.studiiInstitutie ?? ""}
+              placeholder={tc("studii.institutionPlaceholder")}
+              className="input"
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="field-label">{tc("studii.year")}</span>
+            <input
+              type="number"
+              name="studiiAn"
+              min={1950}
+              max={new Date().getFullYear() + 10}
+              defaultValue={profile?.studiiAn ?? ""}
+              placeholder="2024"
+              className="input"
+            />
+          </label>
+        </div>
+      </fieldset>
 
       <label className="flex flex-col gap-1">
         <span className="field-label">{t("photo")} <span className="text-muted">({t("optional")})</span></span>

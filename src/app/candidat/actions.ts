@@ -10,6 +10,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { limitaCv } from "@/lib/planuri";
 import { calculeazaVarsta } from "@/lib/varsta";
+import { StudiiNivel, StudiiStatus } from "@/generated/prisma/enums";
 
 export type FormState = { error?: string; success?: boolean } | undefined;
 
@@ -202,6 +203,32 @@ export async function updateCandidateProfileAction(
   const sexRaw = String(formData.get("sex") || "").trim();
   const sex = SEXE_PERMISE.includes(sexRaw) ? sexRaw : null;
 
+  // Studii (opțional). Dacă e ales un nivel, restul câmpurilor se rețin, iar statusul
+  // implicit e „finalizate". Fără nivel, se golesc toate câmpurile de studii.
+  const nivelValues = Object.values(StudiiNivel) as string[];
+  const statusValues = Object.values(StudiiStatus) as string[];
+  const studiiNivelRaw = String(formData.get("studiiNivel") || "").trim();
+  const studiiNivel = nivelValues.includes(studiiNivelRaw)
+    ? (studiiNivelRaw as StudiiNivel)
+    : null;
+
+  let studiiStatus: StudiiStatus | null = null;
+  let studiiSpecializare: string | null = null;
+  let studiiInstitutie: string | null = null;
+  let studiiAn: number | null = null;
+  if (studiiNivel) {
+    const statusRaw = String(formData.get("studiiStatus") || "").trim();
+    studiiStatus = statusValues.includes(statusRaw)
+      ? (statusRaw as StudiiStatus)
+      : StudiiStatus.FINALIZAT;
+    studiiSpecializare = String(formData.get("studiiSpecializare") || "").trim() || null;
+    studiiInstitutie = String(formData.get("studiiInstitutie") || "").trim() || null;
+    const anParsed = parseOptionalInt(formData.get("studiiAn"));
+    const anCurent = new Date().getFullYear();
+    studiiAn =
+      anParsed !== undefined && anParsed >= 1950 && anParsed <= anCurent + 10 ? anParsed : null;
+  }
+
   let pozaFisier: string | null | undefined; // undefined = păstrează, null = șterge
   const poza = formData.get("poza");
   if (poza instanceof File && poza.size > 0) {
@@ -244,6 +271,11 @@ export async function updateCandidateProfileAction(
         varsta,
         dataNasterii,
         sex,
+        studiiNivel,
+        studiiSpecializare,
+        studiiInstitutie,
+        studiiAn,
+        studiiStatus,
         pozaFisier,
       },
       update: {
@@ -259,6 +291,11 @@ export async function updateCandidateProfileAction(
         varsta,
         dataNasterii,
         sex,
+        studiiNivel,
+        studiiSpecializare,
+        studiiInstitutie,
+        studiiAn,
+        studiiStatus,
         pozaFisier,
       },
     });

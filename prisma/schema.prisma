@@ -20,6 +20,20 @@ enum Disponibilitate {
   PESTE_O_LUNA
 }
 
+enum StudiiNivel {
+  LICEU
+  POSTLICEAL
+  LICENTA
+  MASTER
+  DOCTORAT
+  ALTELE
+}
+
+enum StudiiStatus {
+  IN_CURS
+  FINALIZAT
+}
+
 enum OfferStatus {
   PENDING
   ACCEPTED
@@ -150,6 +164,12 @@ model CandidateProfile {
   varsta          Int? // vârsta (opțional) — derivată din dataNasterii dacă e completată
   dataNasterii    DateTime? // data nașterii (opțional)
   sex             String? // opțional: „Masculin” / „Feminin” / „Altul”
+  // Studii (opțional) — nivel + specializare + instituție + an, cu status „în curs" / „finalizate"
+  studiiNivel        StudiiNivel?
+  studiiSpecializare String?
+  studiiInstitutie   String?
+  studiiAn           Int?
+  studiiStatus       StudiiStatus?
   disponibilitate Disponibilitate @default(SUB_O_LUNA)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt

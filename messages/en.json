@@ -816,6 +816,28 @@
       "SUB_O_LUNA": "Within a month",
       "PESTE_O_LUNA": "More than a month"
     },
+    "studii": {
+      "title": "Education",
+      "level": "Education level",
+      "field": "Field of study",
+      "institution": "Institution",
+      "year": "Graduation year",
+      "status": "Status",
+      "fieldPlaceholder": "e.g. Computer Science",
+      "institutionPlaceholder": "e.g. Politehnica University of Timișoara",
+      "nivel": {
+        "LICEU": "High school",
+        "POSTLICEAL": "Post-secondary school",
+        "LICENTA": "Bachelor's degree",
+        "MASTER": "Master's degree",
+        "DOCTORAT": "PhD",
+        "ALTELE": "Other"
+      },
+      "stare": {
+        "IN_CURS": "In progress",
+        "FINALIZAT": "Completed"
+      }
+    },
     "searchConversations": "Search conversations...",
     "noSearchResults": "No conversations found."
   },
