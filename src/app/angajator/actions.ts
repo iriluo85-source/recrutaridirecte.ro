@@ -16,6 +16,7 @@ import {
 import { MARIME_COMPANIE_OPTIONS } from "@/lib/constants";
 import { notificaRadarPost } from "@/lib/radar";
 import { existaBlocaj } from "@/lib/moderare";
+import { valideazaCui, normalizeazaCui } from "@/lib/cui";
 
 export type FormState = { error?: string; success?: boolean } | undefined;
 
@@ -32,6 +33,11 @@ export async function updateEmployerProfileAction(
 
   const schema = z.object({
     numeCompanie: z.string().trim().min(2, t("errors.companyNameRequired")),
+    cui: z
+      .string()
+      .trim()
+      .min(1, t("errors.cuiRequired"))
+      .refine((v) => valideazaCui(v), t("errors.cuiInvalid")),
     industrie: z.string().trim().optional(),
     locatie: z.string().trim().optional(),
     marimeCompanie: z.enum(MARIME_COMPANIE_OPTIONS).optional(),
@@ -43,6 +49,7 @@ export async function updateEmployerProfileAction(
 
   const parsed = schema.safeParse({
     numeCompanie: formData.get("numeCompanie"),
+    cui: formData.get("cui"),
     industrie: formData.get("industrie") || undefined,
     locatie: formData.get("locatie") || undefined,
     marimeCompanie: formData.get("marimeCompanie") || undefined,
@@ -55,7 +62,7 @@ export async function updateEmployerProfileAction(
     return { error: parsed.error.issues[0]?.message ?? t("errors.invalidData") };
   }
 
-  const { website, linkedin, ...rest } = parsed.data;
+  const { website, linkedin, cui, ...rest } = parsed.data;
 
   // anul înființării (opțional) — validat manual
   const anCurent = new Date().getFullYear();
@@ -70,6 +77,7 @@ export async function updateEmployerProfileAction(
     formData.getAll("domenii").map(String).filter(Boolean).join(",") || null;
   const date = {
     ...rest,
+    cui: normalizeazaCui(cui),
     website: website || undefined,
     linkedin: linkedin || undefined,
     anFondare,

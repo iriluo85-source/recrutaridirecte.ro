@@ -8,6 +8,7 @@ import { DOMENII } from "@/lib/domenii";
 
 type ProfileData = {
   numeCompanie: string;
+  cui: string | null;
   industrie: string | null;
   locatie: string | null;
   marimeCompanie: string | null;
@@ -35,10 +36,25 @@ export default function ProfileForm({ profile }: { profile: ProfileData | null }
 
   return (
     <form action={formAction} className="card mt-6 flex flex-col gap-4">
-      <label className="flex flex-col gap-1">
-        <span className="field-label">{t("profileEdit.companyName")}</span>
-        <input name="numeCompanie" defaultValue={profile?.numeCompanie} required className="input" />
-      </label>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <label className="flex flex-col gap-1">
+          <span className="field-label">{t("profileEdit.companyName")}</span>
+          <input name="numeCompanie" defaultValue={profile?.numeCompanie} required className="input" />
+        </label>
+
+        <label className="flex flex-col gap-1">
+          <span className="field-label">{t("profileEdit.cui")}</span>
+          <input
+            name="cui"
+            defaultValue={profile?.cui ?? ""}
+            required
+            inputMode="numeric"
+            placeholder="RO12345678"
+            className="input"
+          />
+          <span className="text-xs text-muted">{t("profileEdit.cuiHint")}</span>
+        </label>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1">

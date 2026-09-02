@@ -61,6 +61,12 @@ export default async function AngajatorProfilPage() {
       <div className="mx-auto w-full max-w-xl px-6 py-10">
       <div className="card">
         <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
+          {companie.cui && (
+            <div>
+              <dt className="text-muted">{t("profileView.cui")}</dt>
+              <dd>{companie.cui}</dd>
+            </div>
+          )}
           {companie.industrie && (
             <div>
               <dt className="text-muted">{t("profileView.industry")}</dt>

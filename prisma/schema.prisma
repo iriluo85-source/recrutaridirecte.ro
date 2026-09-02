@@ -175,6 +175,7 @@ model EmployerProfile {
   userId         String   @unique
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   numeCompanie   String
+  cui            String?  // CUI-ul firmei (obligatoriu la salvarea profilului — diferențiază angajatorii)
   industrie      String?
   locatie        String?
   marimeCompanie String?
