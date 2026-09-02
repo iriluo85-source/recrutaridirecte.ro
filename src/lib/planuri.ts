@@ -7,6 +7,8 @@
 // și în logică. Numele afișate sunt de brand: RO = Start / Avânt / Prestige / Nelimitat,
 // EN = Start / Boost / Prestige / Unlimited (vezi `numePlan`).
 
+import { esteAdminEmail } from "@/lib/admin";
+
 export type PlanTip = "FREE" | "GOLD" | "PLATINUM" | "UNLIMITED";
 
 export type Plan = {
@@ -144,6 +146,18 @@ export function numePlan(plan: Plan, locale: string): string {
 }
 
 // ── Reguli funcționale (aplicate în cod) ──────────────────────────────────
+
+// Planul EFECTIV al unui utilizator. Adminii au „Nelimitat" din oficiu, permanent,
+// fără plată — indiferent de `abonamentTip` din baza de date. Adminul e recunoscut
+// după flagul `isAdmin` sau după email (ADMIN_EMAILS). Folosește acest helper peste tot
+// unde contează planul (limite, funcții blocate, badge), NU `abonamentTip` direct.
+export function abonamentEfectiv(
+  user: { isAdmin?: boolean | null; email?: string | null; abonamentTip?: string | null } | null | undefined
+): PlanTip | null {
+  if (!user) return null;
+  if (user.isAdmin || esteAdminEmail(user.email)) return "UNLIMITED";
+  return (user.abonamentTip as PlanTip | null) ?? null;
+}
 
 // Câte CV-uri poate încărca un candidat, în funcție de abonament.
 export function limitaCv(tip: string | null | undefined): number {

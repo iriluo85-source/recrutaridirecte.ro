@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { utilizatorDinRequest } from "@/lib/mobileAuth";
-import { limitaCv } from "@/lib/planuri";
+import { limitaCv, abonamentEfectiv } from "@/lib/planuri";
 
 const EXT_PERMISE = [".pdf", ".doc", ".docx"];
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -18,14 +18,14 @@ export async function GET(req: NextRequest) {
     select: {
       id: true,
       cvFiles: { orderBy: { createdAt: "desc" }, select: { id: true, eticheta: true, createdAt: true } },
-      user: { select: { abonamentTip: true } },
+      user: { select: { abonamentTip: true, isAdmin: true, email: true } },
     },
   });
   if (!profil) return NextResponse.json({ cvuri: [], limita: 0 });
 
   return NextResponse.json({
     cvuri: profil.cvFiles,
-    limita: limitaCv(profil.user.abonamentTip),
+    limita: limitaCv(abonamentEfectiv(profil.user)),
   });
 }
 
@@ -53,12 +53,15 @@ export async function POST(req: NextRequest) {
 
   const candidate = await prisma.candidateProfile.findUnique({
     where: { userId: u.sub },
-    include: { _count: { select: { cvFiles: true } }, user: { select: { abonamentTip: true } } },
+    include: {
+      _count: { select: { cvFiles: true } },
+      user: { select: { abonamentTip: true, isAdmin: true, email: true } },
+    },
   });
   if (!candidate) {
     return NextResponse.json({ error: "Completează întâi profilul." }, { status: 400 });
   }
-  const limita = limitaCv(candidate.user.abonamentTip);
+  const limita = limitaCv(abonamentEfectiv(candidate.user));
   if (candidate._count.cvFiles >= limita) {
     return NextResponse.json({ error: `Ai atins limita de ${limita} CV-uri.` }, { status: 400 });
   }

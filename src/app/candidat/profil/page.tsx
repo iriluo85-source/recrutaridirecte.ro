@@ -6,6 +6,7 @@ import PageBanner from "@/components/PageBanner";
 import PlanBadge from "@/components/PlanBadge";
 import PhotoZoom from "@/components/PhotoZoom";
 import { formatStudii } from "@/lib/studii";
+import { abonamentEfectiv } from "@/lib/planuri";
 
 export default async function CandidatProfilPage() {
   const t = await getTranslations("candidate");
@@ -98,7 +99,7 @@ export default async function CandidatProfilPage() {
       <PageBanner
         image="/images/hero-engineer.jpg"
         title={profile.numeComplet}
-        titleBadge={<PlanBadge role="CANDIDATE" tip={user?.abonamentTip} locale={locale} />}
+        titleBadge={<PlanBadge role="CANDIDATE" tip={abonamentEfectiv(user)} locale={locale} />}
         subtitle={profile.titluCurent}
         maxWidthClass="max-w-2xl"
       >

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { utilizatorDinRequest } from "@/lib/mobileAuth";
-import { planuriPentruRol, PERIOADE_ABONAMENT } from "@/lib/planuri";
+import { planuriPentruRol, PERIOADE_ABONAMENT, abonamentEfectiv } from "@/lib/planuri";
 import { PLATI_ACTIVE } from "@/lib/netopia";
 
 // GET /api/mobile/abonament — abonamentul curent + planurile disponibile pentru rol
@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
   const user = await prisma.user.findUnique({
     where: { id: u.sub },
-    select: { abonamentTip: true, abonamentExpira: true },
+    select: { abonamentTip: true, abonamentExpira: true, isAdmin: true, email: true },
   });
 
   const planuri = planuriPentruRol(u.role).map((p) => ({
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     curent: {
-      tip: user?.abonamentTip ?? "FREE",
+      tip: abonamentEfectiv(user) ?? "FREE",
       expira: user?.abonamentExpira ?? null,
     },
     planuri,

@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { formatStudii } from "@/lib/studii";
+import { abonamentEfectiv } from "@/lib/planuri";
 import PrintButton from "../PrintButton";
 
 export async function generateMetadata() {
@@ -19,7 +20,7 @@ export default async function CvPrintabilPage() {
   if (!session?.user) redirect("/login");
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } });
-  if (user?.abonamentTip !== "UNLIMITED") redirect("/candidat/cv-pilot");
+  if (abonamentEfectiv(user) !== "UNLIMITED") redirect("/candidat/cv-pilot");
 
   const profile = await prisma.candidateProfile.findUnique({
     where: { userId: session.user.id },

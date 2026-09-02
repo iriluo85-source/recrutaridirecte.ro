@@ -8,6 +8,7 @@ import {
   perioadaValida,
   pretPerioada,
   numePlan,
+  abonamentEfectiv,
   PERIOADE_ABONAMENT,
 } from "@/lib/planuri";
 import { anuleazaAbonamentAction } from "./actions";
@@ -32,6 +33,9 @@ export default async function AbonamentePage({
   const user = session?.user
     ? await prisma.user.findUnique({ where: { id: session.user.id } })
     : null;
+
+  // Planul efectiv (adminul are Nelimitat din oficiu) — pentru evidențierea planului curent.
+  const tipCurent = abonamentEfectiv(user);
 
   // Rolul pentru care afișăm planurile: dacă e logat, rolul lui; altfel din ?rol=
   const rolAfisat = session?.user.role ?? (sp.rol === "angajator" ? "EMPLOYER" : "CANDIDATE");
@@ -145,7 +149,7 @@ export default async function AbonamentePage({
 
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {planuri.map((plan) => {
-          const planCurent = user?.abonamentTip ?? "FREE";
+          const planCurent = tipCurent ?? "FREE";
           const estePlanulMeu = planCurent === plan.tip;
           return (
             <div

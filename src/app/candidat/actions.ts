@@ -8,7 +8,7 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { limitaCv } from "@/lib/planuri";
+import { limitaCv, abonamentEfectiv } from "@/lib/planuri";
 import { calculeazaVarsta } from "@/lib/varsta";
 import { StudiiNivel, StudiiStatus } from "@/generated/prisma/enums";
 
@@ -100,13 +100,13 @@ export async function addCvAction(
     where: { userId },
     include: {
       _count: { select: { cvFiles: true } },
-      user: { select: { abonamentTip: true } },
+      user: { select: { abonamentTip: true, isAdmin: true, email: true } },
     },
   });
   if (!candidate) {
     return { error: t("errorCompleteProfileFirst") };
   }
-  const limita = limitaCv(candidate.user.abonamentTip);
+  const limita = limitaCv(abonamentEfectiv(candidate.user));
   if (candidate._count.cvFiles >= limita) {
     return { error: t("errorMaxCvs", { max: limita }) };
   }

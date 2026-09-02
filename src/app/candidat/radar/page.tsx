@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { calculeazaScorPotrivire } from "@/lib/matching";
-import { areRadar } from "@/lib/planuri";
+import { areRadar, abonamentEfectiv } from "@/lib/planuri";
 import PageBanner from "@/components/PageBanner";
 import Avatar from "@/components/Avatar";
 
@@ -16,10 +16,10 @@ export default async function RadarPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session!.user.id },
-    select: { abonamentTip: true },
+    select: { abonamentTip: true, isAdmin: true, email: true },
   });
 
-  if (!areRadar(user?.abonamentTip)) {
+  if (!areRadar(abonamentEfectiv(user))) {
     return (
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-10">
         <div className="card text-center">

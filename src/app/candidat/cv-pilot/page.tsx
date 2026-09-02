@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { analizeazaProfil, CV_PILOT_NUME } from "@/lib/cvPilot";
+import { abonamentEfectiv } from "@/lib/planuri";
 
 export async function generateMetadata() {
   return { title: `${CV_PILOT_NUME} — Recrutare Directă` };
@@ -14,7 +15,7 @@ export default async function CvPilotPage() {
   const userId = session!.user.id;
 
   const user = await prisma.user.findUnique({ where: { id: userId } });
-  const esteUnlimited = user?.abonamentTip === "UNLIMITED";
+  const esteUnlimited = abonamentEfectiv(user) === "UNLIMITED";
 
   const profile = await prisma.candidateProfile.findUnique({
     where: { userId },
