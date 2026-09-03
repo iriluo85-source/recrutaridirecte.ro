@@ -15,8 +15,9 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
       take: 10,
     }),
-    // heartbeat pentru statusul online („activ acum")
-    prisma.user.update({
+    // heartbeat pentru statusul online („activ acum"). updateMany ca să NU arunce
+    // eroare dacă user-ul nu mai există (sesiune veche a unui cont șters).
+    prisma.user.updateMany({
       where: { id: session.user.id },
       data: { ultimaActivitate: new Date() },
     }),

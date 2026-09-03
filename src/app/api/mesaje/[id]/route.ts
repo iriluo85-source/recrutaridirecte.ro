@@ -48,7 +48,7 @@ export async function GET(
       where: { id },
       data: isEmployer ? { employerCititLa: acum } : { candidatCititLa: acum },
     }),
-    prisma.user.update({
+    prisma.user.updateMany({
       where: { id: session.user.id },
       data: { ultimaActivitate: acum },
     }),
