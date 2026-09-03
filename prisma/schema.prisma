@@ -62,6 +62,7 @@ model User {
   emailuriDigest  Boolean @default(false)
   newsletterEmail Boolean @default(false)
   termeniAcceptatiLa DateTime?
+  relansareProfilLa DateTime? // când i-am trimis emailul „completează-ți profilul" (ca să nu-l retrimitem)
   abonamentTip    String?   // GOLD | PLATINUM | UNLIMITED (null = fără abonament / gratuit)
   abonamentExpira DateTime?
   // Date de facturare (pentru factura emisă la plata abonamentului). Firmele completează CUI-ul.

@@ -140,3 +140,22 @@ export async function trimiteEmailBunVenit(to: string): Promise<boolean> {
   </div>`;
   return sendEmail({ to, subject: "Bine ai venit la Recrutare Directă! 🎉", html });
 }
+
+// Reminder pentru candidații care au cont dar NU și-au completat profilul.
+export async function trimiteEmailProfilIncomplet(to: string): Promise<boolean> {
+  const base = process.env.APP_URL || "https://www.recrutaridirecte.ro";
+  const url = `${base}/candidat/profil/editeaza`;
+  const html = `
+  <div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#111">
+    <h2 style="margin:0 0 12px">Ești la un pas de a fi vizibil 👀</h2>
+    <p>Salut,</p>
+    <p>Ai cont pe <strong>Recrutare Directă</strong>, dar <strong>profilul tău nu e completat încă</strong>.</p>
+    <p>Angajatorii caută și filtrează candidații după profil — <strong>fără un profil completat nu apari în rezultate</strong>. Durează 2 minute și te pun în fața firmelor care recrutează.</p>
+    <p style="margin:20px 0">
+      <a href="${url}" style="background:#16a34a;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;display:inline-block;font-weight:bold">Completează-mi profilul</a>
+    </p>
+    <p style="color:#555;font-size:14px">Tot mai mulți candidați se înscriu zilnic — completează-ți profilul ca să fii găsit primul.</p>
+    <p style="color:#888;font-size:12px;margin-top:24px">Dacă nu vrei astfel de emailuri, le poți opri din Setări → Notificări.</p>
+  </div>`;
+  return sendEmail({ to, subject: "Completează-ți profilul ca să te găsească angajatorii", html });
+}
