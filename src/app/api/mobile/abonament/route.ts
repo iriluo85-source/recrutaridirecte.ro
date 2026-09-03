@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { utilizatorDinRequest } from "@/lib/mobileAuth";
 import { planuriPentruRol, PERIOADE_ABONAMENT, abonamentEfectiv } from "@/lib/planuri";
-import { PLATI_ACTIVE } from "@/lib/netopia";
+import { platiActive } from "@/lib/netopia";
 
 // GET /api/mobile/abonament — abonamentul curent + planurile disponibile pentru rol
 export async function GET(req: NextRequest) {
@@ -33,6 +33,6 @@ export async function GET(req: NextRequest) {
       luni: p.luni,
       reducere: Math.round(p.reducere * 100),
     })),
-    platiActive: PLATI_ACTIVE,
+    platiActive: platiActive(),
   });
 }

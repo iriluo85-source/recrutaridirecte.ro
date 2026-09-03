@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { gasestePlan } from "@/lib/planuri";
 import { activeazaAbonament } from "@/lib/abonamente";
-import { PLATI_ACTIVE, initiazaPlataNetopia } from "@/lib/netopia";
+import { platiActive, initiazaPlataNetopia } from "@/lib/netopia";
 
 // Inițiază o plată reală prin Netopia: creează comanda (Payment PENDING), cere un
 // paymentURL securizat și redirecționează userul pe pagina Netopia. Abonamentul se
@@ -14,7 +14,7 @@ import { PLATI_ACTIVE, initiazaPlataNetopia } from "@/lib/netopia";
 export async function initiazaPlataNetopiaAction(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/login");
-  if (!PLATI_ACTIVE) redirect("/abonamente");
+  if (!platiActive()) redirect("/abonamente");
 
   const tip = String(formData.get("tip") || "");
   const plan = gasestePlan(session.user.role, tip);
@@ -57,7 +57,7 @@ export async function initiazaPlataNetopiaAction(formData: FormData) {
 // reale (Netopia) NU sunt configurate. Când PLATI_ACTIVE e true, e dezactivată complet
 // (altfel ar fi o portiță de abonament gratis).
 export async function activeazaAbonamentSimulareAction(formData: FormData) {
-  if (PLATI_ACTIVE) return;
+  if (platiActive()) return;
 
   const session = await auth();
   if (!session?.user) return;

@@ -16,18 +16,27 @@
 // Documentație: https://doc.netopia-payments.com  (API v2)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const SANDBOX = process.env.NETOPIA_SANDBOX !== "false"; // implicit sandbox; live doar cu "false"
-const BASE = SANDBOX
-  ? "https://secure.sandbox.netopia-payments.com"
-  : "https://secure.mobilpay.ro/pay";
-const API_KEY = process.env.NETOPIA_API_KEY ?? "";
-const POS_SIGNATURE = process.env.NETOPIA_POS_SIGNATURE ?? "";
-const APP_URL = (process.env.APP_URL || process.env.AUTH_URL || "http://localhost:3000").replace(/\/$/, "");
-
 const RO_COUNTRY = 642; // ISO 3166-1 numeric pentru România
 
-// Plățile reale sunt active doar când avem ambele credențiale setate.
-export const PLATI_ACTIVE = Boolean(API_KEY && POS_SIGNATURE);
+// Configurația se citește la RUNTIME (nu la nivel de modul), ca să reflecte mereu
+// variabilele de mediu curente — altfel valorile ar putea rămâne „înghețate" la build.
+function cfg() {
+  const sandbox = process.env.NETOPIA_SANDBOX !== "false"; // implicit sandbox; live doar cu "false"
+  return {
+    sandbox,
+    base: sandbox
+      ? "https://secure.sandbox.netopia-payments.com"
+      : "https://secure.mobilpay.ro/pay",
+    apiKey: process.env.NETOPIA_API_KEY ?? "",
+    posSignature: process.env.NETOPIA_POS_SIGNATURE ?? "",
+    appUrl: (process.env.APP_URL || process.env.AUTH_URL || "http://localhost:3000").replace(/\/$/, ""),
+  };
+}
+
+// Plățile reale sunt active doar când avem ambele credențiale setate (verificat la runtime).
+export function platiActive(): boolean {
+  return Boolean(process.env.NETOPIA_API_KEY && process.env.NETOPIA_POS_SIGNATURE);
+}
 
 export type BillingClient = {
   email: string;
@@ -59,7 +68,8 @@ function despartiNume(nume?: string | null): { firstName: string; lastName: stri
 
 // Inițiază o plată și întoarce URL-ul securizat Netopia unde redirecționăm userul.
 export async function initiazaPlataNetopia(intent: IntentPlata): Promise<string> {
-  if (!PLATI_ACTIVE) {
+  const { base, apiKey, posSignature, appUrl } = cfg();
+  if (!apiKey || !posSignature) {
     throw new Error("Netopia nu e configurat (lipsesc credențialele).");
   }
   const { firstName, lastName } = despartiNume(intent.billing.nume);
@@ -67,8 +77,8 @@ export async function initiazaPlataNetopia(intent: IntentPlata): Promise<string>
 
   const body = {
     config: {
-      notifyUrl: `${APP_URL}/api/plata/netopia/confirmare`,
-      redirectUrl: `${APP_URL}/abonamente?activat=1`,
+      notifyUrl: `${appUrl}/api/plata/netopia/confirmare`,
+      redirectUrl: `${appUrl}/abonamente?activat=1`,
       language: "ro",
     },
     payment: {
@@ -76,7 +86,7 @@ export async function initiazaPlataNetopia(intent: IntentPlata): Promise<string>
       // fără `instrument` → flux HOSTED (cardul se introduce pe pagina Netopia)
     },
     order: {
-      posSignature: POS_SIGNATURE,
+      posSignature,
       dateTime: new Date().toISOString(),
       description: `Abonament ${intent.planTip} — Recrutare Directă`,
       orderID: intent.orderId,
@@ -97,9 +107,9 @@ export async function initiazaPlataNetopia(intent: IntentPlata): Promise<string>
     },
   };
 
-  const res = await fetch(`${BASE}/payment/card/start`, {
+  const res = await fetch(`${base}/payment/card/start`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: API_KEY },
+    headers: { "Content-Type": "application/json", Authorization: apiKey },
     body: JSON.stringify(body),
   });
 
@@ -116,16 +126,17 @@ export async function initiazaPlataNetopia(intent: IntentPlata): Promise<string>
 // (date NEÎNCREDERE) și RE-INTEROGHEAZĂ statusul direct la Netopia cu cheia noastră.
 // Doar statusul întors de Netopia contează — o notificare falsă nu poate păcăli.
 export async function verificaConfirmareNetopia(payload: unknown): Promise<RezultatConfirmare> {
-  if (!PLATI_ACTIVE) return { valid: false, platit: false };
+  const { base, apiKey, posSignature } = cfg();
+  if (!apiKey || !posSignature) return { valid: false, platit: false };
 
   const { orderID, ntpID } = extrageIdentificatori(payload);
   if (!orderID) return { valid: false, platit: false };
 
   try {
-    const res = await fetch(`${BASE}/operation/status`, {
+    const res = await fetch(`${base}/operation/status`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: API_KEY },
-      body: JSON.stringify({ posSignature: POS_SIGNATURE, orderID, ntpID }),
+      headers: { "Content-Type": "application/json", Authorization: apiKey },
+      body: JSON.stringify({ posSignature, orderID, ntpID }),
     });
     const data = await res.json().catch(() => null);
     if (!res.ok) return { valid: false, platit: false, orderID, ntpID };

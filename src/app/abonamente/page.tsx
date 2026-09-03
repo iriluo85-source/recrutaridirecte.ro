@@ -12,7 +12,7 @@ import {
   PERIOADE_ABONAMENT,
 } from "@/lib/planuri";
 import { anuleazaAbonamentAction, initiazaPlataNetopiaAction } from "./actions";
-import { PLATI_ACTIVE } from "@/lib/netopia";
+import { platiActive } from "@/lib/netopia";
 
 export async function generateMetadata() {
   const t = await getTranslations("plans");
@@ -214,7 +214,7 @@ export default async function AbonamentePage({
                   <span className="btn-secondary pointer-events-none w-full justify-center opacity-70">
                     {t("currentPlan")}
                   </span>
-                ) : plan.tip !== "FREE" && !PLATI_ACTIVE ? (
+                ) : plan.tip !== "FREE" && !platiActive() ? (
                   <span className="btn-secondary pointer-events-none w-full justify-center opacity-60">
                     {t("comingSoon")}
                   </span>
