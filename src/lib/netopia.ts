@@ -19,7 +19,7 @@
 const SANDBOX = process.env.NETOPIA_SANDBOX !== "false"; // implicit sandbox; live doar cu "false"
 const BASE = SANDBOX
   ? "https://secure.sandbox.netopia-payments.com"
-  : "https://secure.netopia-payments.com";
+  : "https://secure.mobilpay.ro/pay";
 const API_KEY = process.env.NETOPIA_API_KEY ?? "";
 const POS_SIGNATURE = process.env.NETOPIA_POS_SIGNATURE ?? "";
 const APP_URL = (process.env.APP_URL || process.env.AUTH_URL || "http://localhost:3000").replace(/\/$/, "");
