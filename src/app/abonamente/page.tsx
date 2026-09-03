@@ -11,7 +11,7 @@ import {
   abonamentEfectiv,
   PERIOADE_ABONAMENT,
 } from "@/lib/planuri";
-import { anuleazaAbonamentAction } from "./actions";
+import { anuleazaAbonamentAction, initiazaPlataNetopiaAction } from "./actions";
 import { PLATI_ACTIVE } from "@/lib/netopia";
 
 export async function generateMetadata() {
@@ -22,7 +22,7 @@ export async function generateMetadata() {
 export default async function AbonamentePage({
   searchParams,
 }: {
-  searchParams: Promise<{ rol?: string; activat?: string; anulat?: string; perioada?: string }>;
+  searchParams: Promise<{ rol?: string; activat?: string; anulat?: string; perioada?: string; eroare?: string }>;
 }) {
   const t = await getTranslations("plans");
   const locale = await getLocale();
@@ -99,6 +99,11 @@ export default async function AbonamentePage({
       {sp.activat && (
         <div className="mt-6 rounded-lg border border-accent/30 bg-accent-secondary px-4 py-3 text-center text-sm font-medium text-accent-secondary-foreground">
           {t("activatedBanner")}
+        </div>
+      )}
+      {sp.eroare === "plata" && (
+        <div className="mt-6 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-center text-sm text-red-600 dark:text-red-400">
+          {t("paymentError")}
         </div>
       )}
       {sp.anulat && (
@@ -224,12 +229,15 @@ export default async function AbonamentePage({
                     </button>
                   </form>
                 ) : (
-                  <Link
-                    href={`/abonamente/plata?tip=${plan.tip}`}
-                    className={`w-full justify-center ${plan.evidentiat ? "btn-primary" : "btn-secondary"}`}
-                  >
-                    {t("choose")}
-                  </Link>
+                  <form action={initiazaPlataNetopiaAction}>
+                    <input type="hidden" name="tip" value={plan.tip} />
+                    <button
+                      type="submit"
+                      className={`w-full justify-center ${plan.evidentiat ? "btn-primary" : "btn-secondary"}`}
+                    >
+                      {t("choose")}
+                    </button>
+                  </form>
                 )}
               </div>
             </div>

@@ -82,6 +82,24 @@ model User {
   testimoniale     Testimonial[]
 }
 
+// Plată abonament prin Netopia. Ținem evidența comenzilor (orderID unic) ca să putem:
+//  - regăsi userId + planul la confirmare (IPN),
+//  - verifica suma,
+//  - evita procesarea dublă (idempotență): activăm + facturăm o SINGURĂ dată per comandă.
+model Payment {
+  id        String   @id @default(cuid())
+  orderID   String   @unique // id-ul comenzii trimis la Netopia (îl regăsim în IPN)
+  userId    String
+  planTip   String // GOLD | PLATINUM | UNLIMITED
+  suma      Float // lei (2 zecimale)
+  status    String   @default("PENDING") // PENDING | PAID | FAILED
+  ntpID     String? // id-ul tranzacției la Netopia (din confirmare)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
 // Testimonial / recenzie despre platformă — moderat (aprobat de admin înainte de afișare).
 model Testimonial {
   id        String   @id @default(cuid())

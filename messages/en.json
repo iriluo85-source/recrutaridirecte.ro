@@ -501,7 +501,8 @@
     "faqQ4": "What happens if I switch to the free plan?",
     "faqA4": "You keep your account and all your data. Only some premium features become unavailable until you upgrade again.",
     "activeBanner": "Active subscription: {plan}, until {date}.",
-    "activatedBanner": "Subscription activated (simulation).",
+    "activatedBanner": "Payment successful! Your subscription is being activated.",
+    "paymentError": "The payment could not be started. Please try again or contact us if it persists.",
     "canceledBanner": "Subscription canceled.",
     "cancel": "Cancel subscription",
     "checkout": {

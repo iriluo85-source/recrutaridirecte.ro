@@ -21,8 +21,10 @@ export default async function PlataPage({
   if (!session?.user) redirect("/login");
   if (!session.user.role) redirect("/alege-rol");
 
-  // Cât timp plățile reale (Netopia) nu sunt active, checkout-ul demo nu e accesibil.
-  if (!PLATI_ACTIVE) redirect("/abonamente");
+  // Când plățile reale (Netopia) sunt active, nu mai folosim checkout-ul demo —
+  // plata pornește direct din /abonamente către pagina securizată Netopia.
+  // Pagina demo rămâne utilă doar local (fără credențiale Netopia).
+  if (PLATI_ACTIVE) redirect("/abonamente");
 
   const { tip } = await searchParams;
   const plan = gasestePlan(session.user.role, tip ?? "");

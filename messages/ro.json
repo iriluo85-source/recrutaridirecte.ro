@@ -501,7 +501,8 @@
     "faqQ4": "Ce se întâmplă dacă trec pe planul gratuit?",
     "faqA4": "Îți păstrezi contul și toate datele. Doar unele funcții premium devin indisponibile până la o nouă upgradare.",
     "activeBanner": "Abonament activ: {plan}, până la {date}.",
-    "activatedBanner": "Abonament activat (simulare).",
+    "activatedBanner": "Plată efectuată cu succes! Abonamentul se activează în câteva momente.",
+    "paymentError": "Plata nu a putut fi inițiată. Încearcă din nou sau scrie-ne dacă persistă.",
     "canceledBanner": "Abonament anulat.",
     "cancel": "Anulează abonamentul",
     "checkout": {

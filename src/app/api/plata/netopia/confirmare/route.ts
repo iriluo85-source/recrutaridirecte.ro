@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { verificaConfirmareNetopia } from "@/lib/netopia";
 import { activeazaAbonament } from "@/lib/abonamente";
 import { emiteFacturaAbonament } from "@/lib/oblio";
@@ -6,13 +7,13 @@ import { emiteFacturaAbonament } from "@/lib/oblio";
 // Endpoint server-to-server apelat de Netopia după fiecare plată (IPN).
 // URL public de configurat în contul Netopia: {APP_URL}/api/plata/netopia/confirmare
 //
-// STARE: SCHELET — `verificaConfirmareNetopia` întoarce încă `valid:false` până
-// completăm integrarea cu credențialele reale. Structura de activare e deja gata:
-// la o plată confirmată corect, prelungim abonamentul prin `activeazaAbonament`.
+// Securitate: NU ne bazăm pe statusul din payload (ar putea fi falsificat). În
+// `verificaConfirmareNetopia` re-interogăm statusul direct la Netopia cu cheia noastră.
+// Idempotență: activăm abonamentul + emitem factura O SINGURĂ dată per comandă
+// (folosind starea din modelul Payment), chiar dacă notificarea vine de mai multe ori.
 export async function POST(req: NextRequest) {
   let payload: unknown = null;
   try {
-    // Netopia poate trimite form-urlencoded sau JSON, în funcție de model.
     const contentType = req.headers.get("content-type") ?? "";
     payload = contentType.includes("application/json")
       ? await req.json()
@@ -22,28 +23,37 @@ export async function POST(req: NextRequest) {
   }
 
   const rezultat = await verificaConfirmareNetopia(payload);
-
   if (!rezultat.valid) {
-    // semnătură incorectă → posibil apel neautentic
-    return NextResponse.json({ ok: false, error: "semnătură invalidă" }, { status: 401 });
+    return NextResponse.json({ ok: false, error: "verificare eșuată" }, { status: 400 });
   }
 
-  if (rezultat.platit && rezultat.userId && rezultat.planTip) {
-    await activeazaAbonament(rezultat.userId, rezultat.planTip);
+  if (rezultat.platit && rezultat.orderID) {
+    const payment = await prisma.payment.findUnique({ where: { orderID: rezultat.orderID } });
 
-    // Emite automat factura în Oblio → e-Factura. Ne-blocant: dacă facturarea
-    // eșuează, nu respingem plata (se poate reemite manual din Oblio).
-    try {
-      const factura = await emiteFacturaAbonament(rezultat.userId, rezultat.planTip);
-      if (!factura.emisa && factura.eroare !== "Oblio neconfigurat") {
-        console.error("[plata] Factura Oblio nu a fost emisă:", factura.eroare);
+    if (payment && payment.status !== "PAID") {
+      // Marcăm PAID doar dacă e încă PENDING — câștigătorul cursei procesează o dată.
+      const upd = await prisma.payment.updateMany({
+        where: { orderID: rezultat.orderID, status: "PENDING" },
+        data: { status: "PAID", ntpID: rezultat.ntpID },
+      });
+
+      if (upd.count === 1) {
+        await activeazaAbonament(payment.userId, payment.planTip);
+
+        // Factură automată în Oblio → e-Factura. Ne-blocant: dacă eșuează, nu
+        // respingem plata (se poate reemite din Oblio).
+        try {
+          const factura = await emiteFacturaAbonament(payment.userId, payment.planTip);
+          if (!factura.emisa && factura.eroare !== "Oblio neconfigurat") {
+            console.error("[plata] Factura Oblio nu a fost emisă:", factura.eroare);
+          }
+        } catch (e) {
+          console.error("[plata] Emiterea facturii a eșuat:", e);
+        }
       }
-    } catch (e) {
-      console.error("[plata] Emiterea facturii a eșuat:", e);
     }
   }
 
-  // TODO(netopia): întoarce răspunsul EXACT pe care îl așteaptă Netopia pentru a
-  // marca notificarea drept procesată (formatul e specific modelului de integrare).
-  return NextResponse.json({ ok: true });
+  // Netopia consideră notificarea procesată dacă primește 200.
+  return NextResponse.json({ errorCode: 0 });
 }
