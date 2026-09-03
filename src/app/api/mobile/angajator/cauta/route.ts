@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { utilizatorDinRequest } from "@/lib/mobileAuth";
-import { calculeazaScorPotrivire, type MatchCriteria } from "@/lib/matching";
+import { calculeazaScorPotrivire, treceFiltrele, type MatchCriteria } from "@/lib/matching";
 
 // GET /api/mobile/angajator/cauta?skills=..&locatie=..&experientaMin=..&experientaMax=..&bugetMin=..&bugetMax=..&q=..
 // Întoarce candidații cu profil completat, ordonați după scorul de potrivire.
@@ -67,6 +67,8 @@ export async function GET(req: NextRequest) {
       };
     })
     .filter((c) => {
+      // Filtre dure: locație (oraș sau remote), interval de experiență, buget.
+      if (!treceFiltrele(criterii, c)) return false;
       if (!q) return true;
       const hay = `${c.numeComplet} ${c.titluCurent} ${c.skills.join(" ")} ${c.locatie}`.toLowerCase();
       return hay.includes(q);

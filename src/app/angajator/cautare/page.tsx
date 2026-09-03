@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { calculeazaScorPotrivire } from "@/lib/matching";
+import { calculeazaScorPotrivire, treceFiltrele, type MatchCriteria } from "@/lib/matching";
 import { domeniuDupaSlug } from "@/lib/domenii";
 import { boostCautare } from "@/lib/planuri";
 import PageBanner from "@/components/PageBanner";
@@ -14,6 +14,10 @@ function parseIntParam(v: string | undefined): number | undefined {
   const n = Number(v);
   return Number.isFinite(n) ? n : undefined;
 }
+
+// Relevanța minimă (0-100) de la care un candidat cu abonament e „Promovat" (boost de
+// vizibilitate). Sub acest prag nu se promovează, ca să nu apară abonați total nepotriviți sus.
+const PRAG_PROMOVARE = 25;
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -79,25 +83,42 @@ export default async function CautarePage({
     orderBy: { createdAt: "desc" },
   });
 
+  const criterii: MatchCriteria = {
+    skills,
+    locatie: locatie || undefined,
+    experientaMin,
+    experientaMax,
+    bugetMin,
+    bugetMax,
+  };
+
   const rezultate = candidati
     .map((c) => {
-      const result = calculeazaScorPotrivire(
-        { skills, locatie: locatie || undefined, experientaMin, experientaMax, bugetMin, bugetMax },
-        {
-          locatie: c.locatie,
-          remote: c.remote,
-          aniExperienta: c.aniExperienta,
-          salariuMinim: c.salariuMinim,
-          salariuMaxim: c.salariuMaxim,
-          skills: c.skills.map((s) => s.skill.nume),
-        }
-      );
-      // Abonamentele Platinum/Unlimited primesc un bonus de vizibilitate: apar mai sus.
+      const result = calculeazaScorPotrivire(criterii, {
+        locatie: c.locatie,
+        remote: c.remote,
+        aniExperienta: c.aniExperienta,
+        salariuMinim: c.salariuMinim,
+        salariuMaxim: c.salariuMaxim,
+        skills: c.skills.map((s) => s.skill.nume),
+      });
+      // Abonamentele Platinum/Unlimited sunt AVANTAJATE: primesc un boost de vizibilitate
+      // și apar printre primii — cu condiția să aibă o relevanță minimă (măcar câteva filtre
+      // comune, PRAG_PROMOVARE). Astfel un abonat complet nepotrivit nu urcă artificial peste
+      // un candidat foarte potrivit, dar unul relevant e clar promovat.
       const boost = boostCautare(c.user.abonamentTip);
-      return { candidat: c, score: result.score, prioritar: boost > 0, scorSortare: result.score + boost };
+      const promovat = boost > 0 && result.score >= PRAG_PROMOVARE;
+      return {
+        candidat: c,
+        score: result.score,
+        prioritar: promovat,
+        scorSortare: result.score + (promovat ? boost : 0),
+      };
     })
     .sort((a, b) => b.scorSortare - a.scorSortare)
     .filter((r) => {
+      // Filtre dure: locație (oraș sau remote), interval de experiență, buget.
+      if (!treceFiltrele(criterii, r.candidat)) return false;
       if (filtruPermis && !r.candidat.permisConducere) return false;
       if (filtruDeplasari && !r.candidat.dispusDeplasari) return false;
       return true;
@@ -309,7 +330,7 @@ export default async function CautarePage({
             key={candidat.id}
             href={`/angajator/candidat/${candidat.id}`}
             className={`card flex items-center gap-4 transition hover:border-accent hover:shadow-md ${
-              prioritar ? "border-amber-400/50" : ""
+              prioritar ? "border-amber-400/70 bg-amber-400/5 ring-1 ring-amber-400/30" : ""
             }`}
           >
             <Avatar name={candidat.numeComplet} size={48} />
@@ -317,8 +338,8 @@ export default async function CautarePage({
               <div className="flex flex-wrap items-center gap-2">
                 <p className="font-medium">{candidat.titluCurent}</p>
                 {prioritar && (
-                  <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
-                    ⭐ {t("search.priority")}
+                  <span className="rounded-full bg-amber-400 px-2 py-0.5 text-xs font-semibold text-amber-950">
+                    🚀 {t("search.priority")}
                   </span>
                 )}
                 {savedIds.has(candidat.id) && (

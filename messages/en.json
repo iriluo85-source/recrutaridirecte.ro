@@ -338,7 +338,7 @@
       "budgetMaxLabel": "Maximum budget (lei/month)",
       "searchButton": "Search",
       "noCandidates": "No candidates on the platform yet.",
-      "priority": "Priority",
+      "priority": "Promoted",
       "yearsExperience": "{count, plural, one {# year of experience} other {# years of experience}}",
       "cvAttachedOne": "1 CV attached",
       "cvAttachedMany": "{count} CVs attached",
