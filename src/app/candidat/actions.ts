@@ -229,6 +229,9 @@ export async function updateCandidateProfileAction(
       anParsed !== undefined && anParsed >= 1950 && anParsed <= anCurent + 10 ? anParsed : null;
   }
 
+  const dispusDeplasari = formData.get("dispusDeplasari") === "on";
+  const permisConducere = formData.get("permisConducere") === "on";
+
   let pozaFisier: string | null | undefined; // undefined = păstrează, null = șterge
   const poza = formData.get("poza");
   if (poza instanceof File && poza.size > 0) {
@@ -276,6 +279,8 @@ export async function updateCandidateProfileAction(
         studiiInstitutie,
         studiiAn,
         studiiStatus,
+        dispusDeplasari,
+        permisConducere,
         pozaFisier,
       },
       update: {
@@ -296,6 +301,8 @@ export async function updateCandidateProfileAction(
         studiiInstitutie,
         studiiAn,
         studiiStatus,
+        dispusDeplasari,
+        permisConducere,
         pozaFisier,
       },
     });

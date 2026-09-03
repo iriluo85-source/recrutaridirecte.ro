@@ -125,6 +125,18 @@ export default async function CvPrintabilPage() {
                 <dd className="text-slate-800">{salariu}</dd>
               </div>
             )}
+            {profile.permisConducere && (
+              <div>
+                <dt className="text-slate-500">{tc("atribute.permisConducere")}</dt>
+                <dd className="text-slate-800">✓</dd>
+              </div>
+            )}
+            {profile.dispusDeplasari && (
+              <div>
+                <dt className="text-slate-500">{tc("atribute.deplasari")}</dt>
+                <dd className="text-slate-800">✓</dd>
+              </div>
+            )}
           </dl>
         </section>
 

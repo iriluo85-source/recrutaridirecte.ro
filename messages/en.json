@@ -838,6 +838,10 @@
         "FINALIZAT": "Completed"
       }
     },
+    "atribute": {
+      "permisConducere": "Driving license",
+      "deplasari": "Open to travel"
+    },
     "searchConversations": "Search conversations...",
     "noSearchResults": "No conversations found."
   },

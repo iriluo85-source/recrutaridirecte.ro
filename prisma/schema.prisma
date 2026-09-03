@@ -170,6 +170,8 @@ model CandidateProfile {
   studiiInstitutie   String?
   studiiAn           Int?
   studiiStatus       StudiiStatus?
+  dispusDeplasari    Boolean @default(false) // e de acord cu deplasări / delegații
+  permisConducere    Boolean @default(false) // are permis de conducere
   disponibilitate Disponibilitate @default(SUB_O_LUNA)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt

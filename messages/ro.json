@@ -838,6 +838,10 @@
         "FINALIZAT": "Finalizate"
       }
     },
+    "atribute": {
+      "permisConducere": "Permis de conducere",
+      "deplasari": "Dispus la deplasări"
+    },
     "searchConversations": "Caută conversații...",
     "noSearchResults": "Nicio conversație găsită."
   },

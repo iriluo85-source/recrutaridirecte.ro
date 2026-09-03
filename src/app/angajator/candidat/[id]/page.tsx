@@ -111,6 +111,21 @@ export default async function CandidatDetaliuPage({
           )}
         </dl>
 
+        {(candidat.permisConducere || candidat.dispusDeplasari) && (
+          <div className="mt-6 flex flex-wrap gap-2">
+            {candidat.permisConducere && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-accent-secondary px-2.5 py-1 text-xs font-medium text-accent-secondary-foreground">
+                🚗 {tc("atribute.permisConducere")}
+              </span>
+            )}
+            {candidat.dispusDeplasari && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-accent-secondary px-2.5 py-1 text-xs font-medium text-accent-secondary-foreground">
+                🧳 {tc("atribute.deplasari")}
+              </span>
+            )}
+          </div>
+        )}
+
         <div className="mt-6">
           <h2 className="field-label">{t("candidate.skills")}</h2>
           <p className="mt-1">

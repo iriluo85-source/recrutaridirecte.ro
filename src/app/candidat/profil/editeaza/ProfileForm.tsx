@@ -28,6 +28,8 @@ type ProfileData = {
   studiiInstitutie: string | null;
   studiiAn: number | null;
   studiiStatus: string | null;
+  dispusDeplasari: boolean;
+  permisConducere: boolean;
   pozaFisier: string | null;
   disponibilitate: string;
   skills: { skill: { nume: string } }[];
@@ -218,6 +220,27 @@ export default function ProfileForm({ profile }: { profile: ProfileData | null }
           </label>
         </div>
       </fieldset>
+
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            name="permisConducere"
+            defaultChecked={profile?.permisConducere}
+            className="accent-accent"
+          />
+          {tc("atribute.permisConducere")}
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            name="dispusDeplasari"
+            defaultChecked={profile?.dispusDeplasari}
+            className="accent-accent"
+          />
+          {tc("atribute.deplasari")}
+        </label>
+      </div>
 
       <label className="flex flex-col gap-1">
         <span className="field-label">{t("photo")} <span className="text-muted">({t("optional")})</span></span>

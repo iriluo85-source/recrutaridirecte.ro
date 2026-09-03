@@ -32,6 +32,8 @@ export default async function CautarePage({
   const experientaMax = parseIntParam(typeof params.experientaMax === "string" ? params.experientaMax : undefined);
   const bugetMin = parseIntParam(typeof params.bugetMin === "string" ? params.bugetMin : undefined);
   const bugetMax = parseIntParam(typeof params.bugetMax === "string" ? params.bugetMax : undefined);
+  const filtruPermis = params.permis === "on";
+  const filtruDeplasari = params.deplasari === "on";
 
   const domeniu = domeniuDupaSlug(typeof params.domeniu === "string" ? params.domeniu : undefined);
 
@@ -94,7 +96,12 @@ export default async function CautarePage({
       const boost = boostCautare(c.user.abonamentTip);
       return { candidat: c, score: result.score, prioritar: boost > 0, scorSortare: result.score + boost };
     })
-    .sort((a, b) => b.scorSortare - a.scorSortare);
+    .sort((a, b) => b.scorSortare - a.scorSortare)
+    .filter((r) => {
+      if (filtruPermis && !r.candidat.permisConducere) return false;
+      if (filtruDeplasari && !r.candidat.dispusDeplasari) return false;
+      return true;
+    });
 
   const REZULTATE_PE_PAGINA = 10;
   const pageCurent = Math.max(1, parseIntParam(typeof params.page === "string" ? params.page : undefined) ?? 1);
@@ -113,6 +120,8 @@ export default async function CautarePage({
     if (experientaMax !== undefined) qs.set("experientaMax", String(experientaMax));
     if (bugetMin !== undefined) qs.set("bugetMin", String(bugetMin));
     if (bugetMax !== undefined) qs.set("bugetMax", String(bugetMax));
+    if (filtruPermis) qs.set("permis", "on");
+    if (filtruDeplasari) qs.set("deplasari", "on");
     qs.set("page", String(page));
     return `/angajator/cautare?${qs.toString()}`;
   }
@@ -136,6 +145,8 @@ export default async function CautarePage({
       experientaMax !== undefined ||
       bugetMin !== undefined ||
       bugetMax !== undefined ||
+      filtruPermis ||
+      filtruDeplasari ||
       domeniu
   );
 
@@ -218,6 +229,16 @@ export default async function CautarePage({
             className="input"
           />
         </label>
+        <div className="col-span-1 flex flex-wrap gap-x-6 gap-y-2 sm:col-span-2">
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="permis" value="on" defaultChecked={filtruPermis} className="accent-accent" />
+            🚗 {tc("atribute.permisConducere")}
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="deplasari" value="on" defaultChecked={filtruDeplasari} className="accent-accent" />
+            🧳 {tc("atribute.deplasari")}
+          </label>
+        </div>
         <button type="submit" className="btn-primary col-span-1 sm:col-span-2">
           {t("search.searchButton")}
         </button>
