@@ -11,8 +11,8 @@ export const LEGAL_CONFIG = {
   cui: "55454004",
   nrRegCom: "J2026050632000",
   sediu: "Sat Ghiroda, Comuna Ghiroda, jud. Timiș, Str. Soarelui nr. 5, camera 1",
-  emailContact: "iriluo85@gmail.com",
-  emailGdpr: "iriluo85@gmail.com",
+  emailContact: "officerecrutaridirecte@gmail.com",
+  emailGdpr: "officerecrutaridirecte@gmail.com",
   telefon: "0771 732 148",
   platitorTva: false, // firmă neplătitoare de TVA → prețuri fără TVA
   procesatorPlati: "Netopia",
