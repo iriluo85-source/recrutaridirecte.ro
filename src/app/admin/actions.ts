@@ -178,3 +178,33 @@ export async function deleteDocumentAction(formData: FormData) {
 
   revalidatePath("/admin/documente");
 }
+
+// Setează manual abonamentul unui utilizator (admin). Folosit pentru conturi
+// „comp" — ex. oferta „primii angajatori gratuit" sau conturi de demo.
+// tip gol = fără abonament; altfel GOLD | PLATINUM | UNLIMITED, valabil `luni` luni.
+export async function seteazaAbonamentAction(formData: FormData) {
+  const session = await auth();
+  if (!session?.user?.isAdmin) return;
+
+  const userId = String(formData.get("userId") || "");
+  if (!userId) return;
+
+  const tip = String(formData.get("tip") || "").trim();
+  const TIPURI = ["GOLD", "PLATINUM", "UNLIMITED"];
+  const luni = Math.min(36, Math.max(1, Number(formData.get("luni")) || 12));
+
+  if (!tip) {
+    await prisma.user.updateMany({
+      where: { id: userId },
+      data: { abonamentTip: null, abonamentExpira: null },
+    });
+  } else if (TIPURI.includes(tip)) {
+    const expira = new Date(Date.now() + luni * 30 * 24 * 60 * 60 * 1000);
+    await prisma.user.updateMany({
+      where: { id: userId },
+      data: { abonamentTip: tip, abonamentExpira: expira },
+    });
+  }
+
+  revalidatePath("/admin/utilizatori");
+}

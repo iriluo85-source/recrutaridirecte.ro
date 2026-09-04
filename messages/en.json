@@ -689,6 +689,7 @@
     "createdOn": "created on",
     "emailUnconfirmed": "email unconfirmed",
     "deleteAccount": "Delete account",
+    "setSubscription": "Set subscription",
     "documentsTitle": "Documents",
     "documentsSubtitle": "Personal records (e.g. diplomas, certifications) — visible only to the administrator.",
     "noDocuments": "No documents uploaded yet.",
