@@ -32,6 +32,7 @@ export default async function Navbar() {
   } else if (session.user.role === "CANDIDATE") {
     links = [
       { href: "/", label: t("home") },
+      { href: "/companii", label: t("companies") },
       { href: "/candidat/profil", label: t("myProfile") },
       { href: "/candidat/oferte", label: t("myOffers") },
       { href: "/candidat/radar", label: t("radar") },

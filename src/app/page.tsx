@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { DOMENII } from "@/lib/domenii";
 import { alegeSlideAleator } from "@/lib/hero";
+import { SELECT_DIRECTOR, companiiActive, filtreazaCompanii } from "@/lib/companii";
 import Avatar from "@/components/Avatar";
 
 // rotunjim în jos la un prag „frumos" ca „Peste N" să rămână mereu adevărat
@@ -44,6 +45,20 @@ export default async function Home({
   ]);
   const candidatiAfisat = pestePrag(candidatiCount);
   const companiiAfisat = pestePrag(companiiCount);
+
+  // Firmele active din director, pentru banda „vezi companii" de deasupra numerelor.
+  // Aceleași reguli ca /companii (src/lib/companii.ts), ordonate la fel: cine
+  // angajează primul, apoi firmele abonate.
+  const companiiDirector = filtreazaCompanii(
+    companiiActive(
+      await prisma.employerProfile.findMany({
+        orderBy: { updatedAt: "desc" },
+        select: SELECT_DIRECTOR,
+      })
+    ),
+    {}
+  );
+  const companiiPreview = companiiDirector.slice(0, 5);
 
   // ---- date pentru dashboard (utilizatori logați) ----
   let candDash: { hasProfile: boolean; pending: number; accepted: number; rejected: number } | null = null;
@@ -206,6 +221,39 @@ export default async function Home({
           </div>
         </div>
       </section>
+
+      {/* Intrare în directorul de companii */}
+      {companiiPreview.length > 0 && (
+        <section className="border-b border-line">
+          <div className="mx-auto flex max-w-5xl flex-col items-start gap-5 px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <h2 className="text-lg font-semibold">{t("companiesTitle")}</h2>
+              <p className="mt-1 text-sm text-muted">{t("companiesSubtitle")}</p>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                {companiiPreview.map((c) => (
+                  <span
+                    key={c.id}
+                    className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-2.5 py-1 text-xs"
+                  >
+                    <Avatar name={c.numeCompanie} size={20} />
+                    <span className="max-w-[11rem] truncate">{c.numeCompanie}</span>
+                  </span>
+                ))}
+                {companiiDirector.length > companiiPreview.length && (
+                  <span className="text-xs text-muted">
+                    {t("companiesMore", {
+                      count: companiiDirector.length - companiiPreview.length,
+                    })}
+                  </span>
+                )}
+              </div>
+            </div>
+            <Link href="/companii" className="btn-primary shrink-0">
+              {t("companiesCta")}
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Bandă social proof — numere live */}
       <section className="border-b border-line bg-surface/60">
