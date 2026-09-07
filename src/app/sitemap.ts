@@ -4,11 +4,11 @@ import { SELECT_DIRECTOR, companiiActive } from "@/lib/companii";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 
-// Se regenerează din oră în oră: altfel sitemap-ul rămâne înghețat la starea
-// bazei de date din momentul build-ului și firmele noi nu ajung niciodată în Google.
-// La build baza poate lipsi (Railway rulează `prisma db push` abia la start),
-// caz în care rămân doar rutele statice până la prima revalidare.
-export const revalidate = 3600;
+// Se generează la fiecare cerere, nu la build. Pe Railway `next build` rulează
+// ÎNAINTE de `prisma db push`, deci la build baza nu există și interogarea cade
+// pe catch — un sitemap prerandat ar rămâne blocat fără nicio companie.
+// E citit doar de crawlere, așa că o interogare per cerere nu costă nimic.
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const rute = [
