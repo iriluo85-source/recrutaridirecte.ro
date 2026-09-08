@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
-import { domeniiCuCandidati, agregheaza, type CandidatAgregat } from "@/lib/disponibili";
+import {
+  domeniiCuCandidati,
+  oraseCuCandidati,
+  slugOras,
+  agregheaza,
+  type CandidatAgregat,
+} from "@/lib/disponibili";
 import PageBanner from "@/components/PageBanner";
 
 export const dynamic = "force-dynamic";
@@ -44,6 +50,7 @@ export default async function DisponibiliIndexPage() {
   const candidati = await incarcaCandidati();
   const domenii = domeniiCuCandidati(candidati);
   const total = agregheaza(candidati);
+  const orase = oraseCuCandidati(candidati);
 
   return (
     <main className="flex-1">
@@ -59,7 +66,9 @@ export default async function DisponibiliIndexPage() {
         {domenii.length === 0 ? (
           <p className="text-sm text-muted">{t("empty")}</p>
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <>
+            <h2 className="text-lg font-semibold">{t("byDomain")}</h2>
+            <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {domenii.map(({ domeniu, total: n }) => (
               <Link
                 key={domeniu.slug}
@@ -75,7 +84,30 @@ export default async function DisponibiliIndexPage() {
                 </div>
               </Link>
             ))}
-          </div>
+            </div>
+          </>
+        )}
+
+        {/* Orașele acoperă TOȚI candidații, nu doar pe cei ale căror skill-uri se
+            potrivesc cu un domeniu — locația e obligatorie la înregistrare. */}
+        {orase.length > 0 && (
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold">{t("byCityAll")}</h2>
+            <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {orase.map((o) => (
+                <Link
+                  key={o.oras}
+                  href={`/disponibili/oras/${slugOras(o.oras)}`}
+                  className="flex items-center justify-between rounded-lg border border-line px-4 py-2.5 transition hover:border-accent"
+                >
+                  <span className="font-medium">{o.oras}</span>
+                  <span className="text-sm text-accent">
+                    {t("available", { count: o.candidati })}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
         )}
 
         <div className="card mt-8 border-accent/40 bg-accent/5">

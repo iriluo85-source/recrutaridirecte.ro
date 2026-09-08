@@ -134,3 +134,34 @@ export function domeniiCuCandidati(
     .filter((x) => x.total >= pragMinim)
     .sort((a, b) => b.total - a.total);
 }
+
+/** Slug de oraș pentru URL: „Timișoara” -> „timisoara”. */
+export function slugOras(oras: string): string {
+  return normalizeazaText(oras).trim().replace(/\s+/g, "-");
+}
+
+/** Toate orașele cu destui candidați ca să merite o pagină publică. */
+export function oraseCuCandidati(
+  candidati: CandidatAgregat[],
+  pragMinim = PRAG_MINIM_ORAS
+): OrasDisponibil[] {
+  return agregheaza(candidati).orase.filter((o) => o.candidati >= pragMinim);
+}
+
+export function candidatiDinOras(
+  candidati: CandidatAgregat[],
+  slug: string
+): CandidatAgregat[] {
+  const tinta = slug.toLowerCase();
+  return candidati.filter((c) => c.locatie && slugOras(c.locatie) === tinta);
+}
+
+/** Defalcarea pe domenii a unui set de candidați (pentru pagina unui oraș). */
+export function domeniiDinSet(
+  candidati: CandidatAgregat[],
+  pragMinim = 1
+): { domeniu: Domeniu; total: number }[] {
+  return DOMENII.map((d) => ({ domeniu: d, total: candidatiInDomeniu(candidati, d).length }))
+    .filter((x) => x.total >= pragMinim)
+    .sort((a, b) => b.total - a.total);
+}

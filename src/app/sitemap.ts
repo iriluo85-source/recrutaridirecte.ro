@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { SELECT_DIRECTOR, companiiActive } from "@/lib/companii";
 import { DOMENII } from "@/lib/domenii";
+import { oraseCuCandidati, slugOras } from "@/lib/disponibili";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 
@@ -59,5 +60,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...statice, ...disponibili, ...companii];
+  // Orașele cu masă critică — intrarea din Google pe „candidați disponibili <oraș>".
+  let orase: MetadataRoute.Sitemap = [];
+  try {
+    const profiluri = await prisma.candidateProfile.findMany({
+      select: {
+        locatie: true,
+        remote: true,
+        aniExperienta: true,
+        salariuMinim: true,
+        permisConducere: true,
+        dispusDeplasari: true,
+        skills: { select: { skill: { select: { nume: true } } } },
+      },
+    });
+    orase = oraseCuCandidati(
+      profiluri.map((c) => ({ ...c, skills: c.skills.map((s) => s.skill.nume) }))
+    ).map((o) => ({
+      url: APP_URL + "/disponibili/oras/" + slugOras(o.oras),
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    }));
+  } catch {
+    orase = [];
+  }
+
+  return [...statice, ...disponibili, ...orase, ...companii];
 }

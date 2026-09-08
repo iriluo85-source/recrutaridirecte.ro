@@ -1166,7 +1166,7 @@
     "stats": {
       "median": "Median salary asked",
       "experience": "Average experience",
-      "years": "{count} years",
+      "years": "{count, plural, one {# year} other {# years}}",
       "licence": "With a driving licence",
       "travel": "Willing to travel",
       "remote": "Open to remote"
@@ -1174,6 +1174,12 @@
     "ctaTitle": "Want to talk to them?",
     "ctaDesc": "Create a free employer account, search without limits and send as many messages as you like. You pay only when a candidate replies and you choose to open that reply.",
     "ctaButton": "Create an employer account",
-    "privacyNote": "This page shows aggregate numbers only. Candidate names, CVs and contact details are visible only to signed-in employers."
+    "privacyNote": "This page shows aggregate numbers only. Candidate names, CVs and contact details are visible only to signed-in employers.",
+    "cityTitle": "Candidates available in {oras}",
+    "cityMeta": "How many candidates are looking for work in {oras}, by field and salary. Searching is free for employers.",
+    "byCityAll": "By city",
+    "byDomain": "By field",
+    "allCities": "See all cities",
+    "otherDomains": "Other fields"
   }
 }

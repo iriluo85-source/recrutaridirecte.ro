@@ -1166,7 +1166,7 @@
     "stats": {
       "median": "Salariu median cerut",
       "experience": "Experiență medie",
-      "years": "{count} ani",
+      "years": "{count, plural, one {# an} few {# ani} other {# de ani}}",
       "licence": "Cu permis de conducere",
       "travel": "Dispuși la deplasări",
       "remote": "Deschiși la remote"
@@ -1174,6 +1174,12 @@
     "ctaTitle": "Vrei să vorbești cu ei?",
     "ctaDesc": "Îți faci cont de angajator gratuit, cauți nelimitat și le scrii câte mesaje vrei. Plătești abia când un candidat îți răspunde și tu vrei să-i deschizi răspunsul.",
     "ctaButton": "Creează cont de angajator",
-    "privacyNote": "Pe această pagină apar doar cifre agregate. Numele, CV-ul și datele de contact ale candidaților sunt vizibile doar angajatorilor autentificați."
+    "privacyNote": "Pe această pagină apar doar cifre agregate. Numele, CV-ul și datele de contact ale candidaților sunt vizibile doar angajatorilor autentificați.",
+    "cityTitle": "Candidați disponibili în {oras}",
+    "cityMeta": "Câți candidați caută de lucru acum în {oras}, pe domenii și la ce salariu. Căutarea e gratuită pentru angajatori.",
+    "byCityAll": "Pe orașe",
+    "byDomain": "Pe domenii",
+    "allCities": "Vezi toate orașele",
+    "otherDomains": "Alte domenii"
   }
 }
