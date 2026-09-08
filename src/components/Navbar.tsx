@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { campanieActiva } from "@/lib/student";
+import { prisma } from "@/lib/prisma";
+import { soldCredite, raspunsuriGratuiteRamase, esteScutitDeCredite } from "@/lib/credite";
 import { resendVerificationAction } from "@/app/(auth)/actions";
 import ThemeToggle from "./ThemeToggle";
 import LanguageToggle from "./LanguageToggle";
@@ -45,6 +47,25 @@ export default async function Navbar() {
     ];
     showLogout = true;
   } else if (session.user.role === "EMPLOYER") {
+    // Soldul de răspunsuri, direct în meniu: firma trebuie să știe cât mai are
+    // înainte să dea de un lacăt, nu după.
+    const employer = await prisma.employerProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { id: true },
+    });
+    let etichetaCredite = t("plans");
+    if (employer) {
+      if (await esteScutitDeCredite(employer.id)) {
+        etichetaCredite = t("creditsUnlimited");
+      } else {
+        const [sold, gratuite] = await Promise.all([
+          soldCredite(employer.id),
+          raspunsuriGratuiteRamase(employer.id),
+        ]);
+        etichetaCredite = t("creditsCount", { count: sold + gratuite });
+      }
+    }
+
     links = [
       { href: "/", label: t("home") },
       { href: "/angajator/profil", label: t("companyProfile") },
@@ -53,7 +74,7 @@ export default async function Navbar() {
       { href: "/angajator/salvati", label: t("savedCandidates") },
       { href: "/angajator/posturi", label: t("positions") },
       { href: "/angajator/mesaje", label: t("messages") },
-      { href: "/abonamente", label: t("plans") },
+      { href: "/abonamente", label: etichetaCredite },
       { href: "/setari", label: t("settings") },
     ];
     showLogout = true;

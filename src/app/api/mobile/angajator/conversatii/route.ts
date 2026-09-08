@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { utilizatorDinRequest } from "@/lib/mobileAuth";
+import { conversatiiDeblocate, esteScutitDeCredite } from "@/lib/credite";
 
 // GET /api/mobile/angajator/conversatii — conversațiile angajatorului
 export async function GET(req: NextRequest) {
@@ -25,10 +26,17 @@ export async function GET(req: NextRequest) {
     },
   });
 
+  // Aceeași regulă ca pe web: fără deblocare, textul răspunsului nu pleacă spre client.
+  const scutit = await esteScutitDeCredite(employer.id);
+  const deblocate = scutit
+    ? new Set(convs.map((c) => c.id))
+    : await conversatiiDeblocate(convs.map((c) => c.id));
+
   const conversatii = convs
     .map((c) => {
       const ultim = c.messages[0] ?? null;
       const oferta = c.offers[0] ?? null;
+      const blocat = !deblocate.has(c.id) && ultim?.trimisDe === "CANDIDATE";
       const necitit =
         !!ultim &&
         ultim.trimisDe === "CANDIDATE" &&
@@ -41,8 +49,13 @@ export async function GET(req: NextRequest) {
           titlu: c.candidate.titluCurent,
           locatie: c.candidate.locatie,
         },
+        blocat,
         ultimulMesaj: ultim
-          ? { text: ultim.continut ?? "📎 Atașament", trimisDe: ultim.trimisDe, createdAt: ultim.createdAt }
+          ? {
+              text: blocat ? null : ultim.continut ?? "📎 Atașament",
+              trimisDe: ultim.trimisDe,
+              createdAt: ultim.createdAt,
+            }
           : null,
         oferta: oferta
           ? { id: oferta.id, titlu: oferta.titluPost, status: oferta.status, salariu: oferta.salariu }

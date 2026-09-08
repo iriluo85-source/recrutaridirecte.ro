@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import ConversationList, { type ConversationItem } from "@/components/ConversationList";
+import { conversatiiDeblocate, esteScutitDeCredite } from "@/lib/credite";
 
 export default async function MesajeAngajatorPage() {
   const session = await auth();
@@ -20,14 +21,27 @@ export default async function MesajeAngajatorPage() {
       })
     : [];
 
+  // Previzualizarea NU are voie să arate răspunsul candidatului într-o conversație
+  // nedeblocată — altfel firma citește gratis exact lucrul pentru care se plătește.
+  const scutit = employer ? await esteScutitDeCredite(employer.id) : false;
+  const deblocate = scutit
+    ? new Set(conversatii.map((c) => c.id))
+    : await conversatiiDeblocate(conversatii.map((c) => c.id));
+
   const items: ConversationItem[] = conversatii.map((c) => {
     const ultimul = c.messages[0];
+    const blocat = !deblocate.has(c.id) && ultimul?.trimisDe === "CANDIDATE";
     return {
       id: c.id,
       href: `/angajator/mesaje/${c.id}`,
       title: c.candidate.numeComplet,
       subtitle: c.candidate.titluCurent,
-      preview: ultimul ? ultimul.continut ?? t("messages.attachment") : null,
+      preview: blocat
+        ? null
+        : ultimul
+          ? ultimul.continut ?? t("messages.attachment")
+          : null,
+      badge: blocat ? t("messages.lockedReply") : null,
     };
   });
 

@@ -137,7 +137,8 @@ export async function emiteFactura(date: DateFactura): Promise<RezultatFactura> 
 export async function emiteFacturaAbonament(
   userId: string,
   planTip: string,
-  suma?: number
+  suma?: number,
+  luni: number = 1
 ): Promise<RezultatFactura> {
   if (!FACTURARE_ACTIVA) return { emisa: false, eroare: "Oblio neconfigurat" };
 
@@ -172,7 +173,10 @@ export async function emiteFacturaAbonament(
     emailClient: user.email,
     cifClient: user.facturareCui ?? null, // CUI cumpărător (firme) din datele de facturare
     adresaClient: user.facturareAdresa ?? null,
-    denumireProdus: `Abonament ${plan?.nume ?? planTip} (${rolText})`,
+    denumireProdus:
+      luni > 1
+        ? `Abonament ${plan?.nume ?? planTip} (${rolText}) — ${luni} luni`
+        : `Abonament ${plan?.nume ?? planTip} (${rolText})`,
     pretCuTva: pret,
   });
 }

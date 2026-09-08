@@ -93,7 +93,8 @@ model Payment {
   orderID   String   @unique // id-ul comenzii trimis la Netopia (îl regăsim în IPN)
   userId    String
   planTip   String // GOLD | PLATINUM | UNLIMITED
-  suma      Float // lei (2 zecimale)
+  suma      Float // lei (2 zecimale) — TOTALUL platit, pe toata perioada
+  luni      Int      @default(1) // cate luni de abonament s-au platit in aceasta comanda
   status    String   @default("PENDING") // PENDING | PAID | FAILED
   ntpID     String? // id-ul tranzacției la Netopia (din confirmare)
   createdAt DateTime @default(now())

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { gasestePlan } from "@/lib/planuri";
+import { gasestePlan, perioadaValida, pretPerioada } from "@/lib/planuri";
 import { activeazaAbonament } from "@/lib/abonamente";
 import { platiActive, initiazaPlataNetopia } from "@/lib/netopia";
 import { gasestePachet } from "@/lib/credite";
@@ -22,8 +22,13 @@ export async function initiazaPlataNetopiaAction(formData: FormData) {
   const plan = gasestePlan(session.user.role, tip);
   if (!plan || plan.tip === "FREE") redirect("/abonamente");
 
-  // Aceeași funcție ca pe pagina de prețuri: ce vede studentul e ce plătește.
-  const suma = cuReducereStudent(plan.pretLunar, await reducereStudent(session.user.id));
+  // Se încasează TOTALUL pe perioada aleasă, nu prețul unei luni. Aceleași funcții
+  // ca pe pagina de prețuri (pretPerioada + cuReducereStudent), ca suma afișată și
+  // cea trasă de pe card să fie identice.
+  const perioada = perioadaValida(String(formData.get("perioada") || ""));
+  const pretRedus = cuReducereStudent(plan.pretLunar, await reducereStudent(session.user.id));
+  const pp = pretPerioada(pretRedus, perioada);
+  const suma = pp.total;
   const orderId = `RD${Date.now()}${Math.random().toString(36).slice(2, 8)}`; // unic, alfanumeric
 
   const user = await prisma.user.findUnique({
@@ -36,7 +41,7 @@ export async function initiazaPlataNetopiaAction(formData: FormData) {
   const oras = user.candidateProfile?.locatie || user.employerProfile?.locatie || null;
 
   await prisma.payment.create({
-    data: { orderID: orderId, userId: user.id, planTip: plan.tip, suma, status: "PENDING" },
+    data: { orderID: orderId, userId: user.id, planTip: plan.tip, suma, luni: pp.luni, status: "PENDING" },
   });
 
   let url: string | null = null;

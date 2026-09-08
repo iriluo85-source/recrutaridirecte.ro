@@ -12,6 +12,7 @@ export type ConversationItem = {
   subtitle?: string | null;
   preview?: string | null;
   date?: string | null;
+  badge?: string | null; // ex. „Răspuns nou · blocat"
 };
 
 export default function ConversationList({ items }: { items: ConversationItem[] }) {
@@ -50,6 +51,11 @@ export default function ConversationList({ items }: { items: ConversationItem[] 
               <p className="font-medium">{it.title}</p>
               {it.subtitle && <p className="text-sm text-muted">{it.subtitle}</p>}
               {it.preview && <p className="mt-1 truncate text-sm text-muted">{it.preview}</p>}
+              {it.badge && (
+                <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-amber-400/15 px-2.5 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
+                  🔒 {it.badge}
+                </span>
+              )}
               {it.date && <p className="mt-2 text-xs text-muted">{it.date}</p>}
             </div>
           </Link>

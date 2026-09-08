@@ -316,6 +316,7 @@ export default async function AbonamentePage({
                 ) : (
                   <form action={initiazaPlataNetopiaAction}>
                     <input type="hidden" name="tip" value={plan.tip} />
+                    <input type="hidden" name="perioada" value={perioada} />
                     <button
                       type="submit"
                       className={`w-full justify-center ${plan.evidentiat ? "btn-primary" : "btn-secondary"}`}

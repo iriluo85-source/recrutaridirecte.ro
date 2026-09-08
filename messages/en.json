@@ -376,7 +376,8 @@
       "noConversations": "You don't have any conversations yet.",
       "attachment": "📎 Attachment",
       "withdrawOffer": "Withdraw offer",
-      "historyLink": "Requests history"
+      "historyLink": "Requests history",
+      "lockedReply": "New reply · locked"
     },
     "counter": {
       "receivedPrefix": "The candidate proposed",
@@ -859,7 +860,9 @@
     "home": "Home",
     "companies": "Companies",
     "howItWorks": "How it works",
-    "student": "Student −50%"
+    "student": "Student −50%",
+    "creditsCount": "{count, plural, =0 {No replies left} one {# reply} other {# replies}}",
+    "creditsUnlimited": "Unlimited replies"
   },
   "common": {
     "save": "Save",

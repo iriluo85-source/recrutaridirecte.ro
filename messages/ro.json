@@ -376,7 +376,8 @@
       "noConversations": "Nu ai nicio conversație încă.",
       "attachment": "📎 Atașament",
       "withdrawOffer": "Retrage oferta",
-      "historyLink": "Istoric cereri"
+      "historyLink": "Istoric cereri",
+      "lockedReply": "Răspuns nou · blocat"
     },
     "counter": {
       "receivedPrefix": "Candidatul a propus",
@@ -859,7 +860,9 @@
     "home": "Pagina principală",
     "companies": "Companii",
     "howItWorks": "Cum funcționează",
-    "student": "Student −50%"
+    "student": "Student −50%",
+    "creditsCount": "{count, plural, =0 {Fără răspunsuri} one {# răspuns} few {# răspunsuri} other {# de răspunsuri}}",
+    "creditsUnlimited": "Răspunsuri nelimitate"
   },
   "common": {
     "save": "Salvează",

@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
             );
           }
         } else {
-          await activeazaAbonament(payment.userId, payment.planTip);
+          await activeazaAbonament(payment.userId, payment.planTip, payment.luni);
         }
 
         // Factură automată în Oblio → e-Factura. Ne-blocant: dacă eșuează, nu
@@ -70,7 +70,14 @@ export async function POST(req: NextRequest) {
         try {
           const factura = pachet
             ? await emiteFacturaCredite(payment.userId, pachet.credite, payment.suma)
-            : await emiteFacturaAbonament(payment.userId, payment.planTip);
+            : // Suma reală încasată, nu prețul lunar — altfel factura unui abonament
+              // anual ar arăta o singură lună.
+              await emiteFacturaAbonament(
+                payment.userId,
+                payment.planTip,
+                payment.suma,
+                payment.luni
+              );
           if (!factura.emisa && factura.eroare !== "Oblio neconfigurat") {
             console.error("[plata] Factura Oblio nu a fost emisă:", factura.eroare);
           }
