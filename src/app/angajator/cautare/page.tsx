@@ -3,6 +3,8 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { calculeazaScorPotrivire, treceFiltrele, type MatchCriteria } from "@/lib/matching";
+import { estimeazaAudienta } from "@/lib/audienta";
+import EstimatorAudienta from "@/components/EstimatorAudienta";
 import { domeniuDupaSlug } from "@/lib/domenii";
 import { boostCautare } from "@/lib/planuri";
 import PageBanner from "@/components/PageBanner";
@@ -124,6 +126,27 @@ export default async function CautarePage({
       return true;
     });
 
+  // Audiența pe praguri de salariu: aceleași filtre ca în căutare, DAR fără buget —
+  // ca să se vadă câți oameni se deschid pe măsură ce firma urcă suma oferită.
+  const criteriiFaraBuget: MatchCriteria = { ...criterii, bugetMax: undefined };
+  const eligibili = candidati.filter((c) => {
+    if (
+      !treceFiltrele(criteriiFaraBuget, {
+        locatie: c.locatie,
+        remote: c.remote,
+        aniExperienta: c.aniExperienta,
+        salariuMinim: c.salariuMinim,
+        salariuMaxim: c.salariuMaxim,
+      })
+    ) {
+      return false;
+    }
+    if (filtruPermis && !c.permisConducere) return false;
+    if (filtruDeplasari && !c.dispusDeplasari) return false;
+    return true;
+  });
+  const audienta = estimeazaAudienta(eligibili);
+
   const REZULTATE_PE_PAGINA = 10;
   const pageCurent = Math.max(1, parseIntParam(typeof params.page === "string" ? params.page : undefined) ?? 1);
   const totalPagini = Math.max(1, Math.ceil(rezultate.length / REZULTATE_PE_PAGINA));
@@ -131,6 +154,21 @@ export default async function CautarePage({
     (pageCurent - 1) * REZULTATE_PE_PAGINA,
     pageCurent * REZULTATE_PE_PAGINA
   );
+
+  // Click pe o bară din estimator = aceeași căutare, cu bugetul ales.
+  function linkCuBuget(salariu: number) {
+    const qs = new URLSearchParams();
+    if (domeniu) qs.set("domeniu", domeniu.slug);
+    if (skillsInput) qs.set("skills", skillsInput);
+    if (locatie) qs.set("locatie", locatie);
+    if (experientaMin !== undefined) qs.set("experientaMin", String(experientaMin));
+    if (experientaMax !== undefined) qs.set("experientaMax", String(experientaMax));
+    if (bugetMin !== undefined) qs.set("bugetMin", String(bugetMin));
+    qs.set("bugetMax", String(salariu));
+    if (filtruPermis) qs.set("permis", "on");
+    if (filtruDeplasari) qs.set("deplasari", "on");
+    return `/angajator/cautare?${qs.toString()}`;
+  }
 
   function construiesteLinkPagina(page: number) {
     const qs = new URLSearchParams();
@@ -264,6 +302,8 @@ export default async function CautarePage({
           {t("search.searchButton")}
         </button>
       </form>
+
+      <EstimatorAudienta audienta={audienta} linkPentruBuget={linkCuBuget} />
 
       {/* Căutări salvate + salvare căutare curentă */}
       <div className="mt-4 flex flex-col gap-3">

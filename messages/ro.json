@@ -1125,5 +1125,13 @@
       "camera": "Nu am putut porni camera. Alege o poză din galerie.",
       "upload": "Nu am putut trimite poza. Încearcă din nou."
     }
+  },
+  "audienta": {
+    "title": "Câți candidați ajungi să contactezi, în funcție de salariu",
+    "subtitle": "Numărătoare reală pe filtrele tale de acum. Apasă pe o linie ca să vezi lista la bugetul respectiv.",
+    "candidates": "{count, plural, =0 {niciun candidat} one {# candidat} few {# candidați} other {# de candidați}}",
+    "applyBudget": "Caută cu bugetul {salariu} lei",
+    "insight": "Dacă urci de la {de} la {la} lei, ajungi la încă {castig, plural, one {# candidat} few {# candidați} other {# de candidați}}.",
+    "noSalaryNote": "{count, plural, one {# candidat nu și-a declarat salariul, deci apare la orice buget.} few {# candidați nu și-au declarat salariul, deci apar la orice buget.} other {# de candidați nu și-au declarat salariul, deci apar la orice buget.}}"
   }
 }

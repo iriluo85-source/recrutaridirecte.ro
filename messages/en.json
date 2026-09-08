@@ -1125,5 +1125,13 @@
       "camera": "We could not start the camera. Choose a photo instead.",
       "upload": "We could not send the photo. Please try again."
     }
+  },
+  "audienta": {
+    "title": "How many candidates you can reach, by salary",
+    "subtitle": "A real count on your current filters. Click a row to see the list at that budget.",
+    "candidates": "{count, plural, =0 {no candidates} one {# candidate} other {# candidates}}",
+    "applyBudget": "Search with a {salariu} lei budget",
+    "insight": "Going from {de} to {la} lei reaches {castig, plural, one {# more candidate} other {# more candidates}}.",
+    "noSalaryNote": "{count, plural, one {# candidate has not stated a salary, so they appear at any budget.} other {# candidates have not stated a salary, so they appear at any budget.}}"
   }
 }
