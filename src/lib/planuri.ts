@@ -17,6 +17,7 @@ export type Plan = {
   numeEn: string; // nume afișat în EN
   pretLunar: number; // lei / lună (0 = gratuit)
   evidentiat?: boolean; // „cel mai popular”
+  ascuns?: boolean; // retras din vânzare: nu se mai afișează, dar rămâne rezolvabil pentru cine îl are
   clasaAccent: string;
   beneficii: string[];
 };
@@ -87,47 +88,46 @@ export const PLANURI_ANGAJATOR: Plan[] = [
     numeEn: "Start",
     pretLunar: 0,
     clasaAccent: ACCENT.FREE,
-    beneficii: ["Profil de companie", "Căutări limitate", "Câteva oferte pe lună"],
+    beneficii: [
+      "Căutare nelimitată în toată baza",
+      "Profil complet și scor de potrivire",
+      "Anunțuri de angajare",
+      "2 răspunsuri deblocate gratuit în fiecare lună",
+    ],
   },
+  // Retrase din vânzare când am trecut pe plata la răspuns. Rămân în listă ca să
+  // se poată rezolva numele pe facturi și în interfață pentru firmele care le mai au.
   {
     tip: "GOLD",
     nume: "Avânt",
     numeEn: "Boost",
     pretLunar: 99.99,
+    ascuns: true,
     clasaAccent: ACCENT.GOLD,
-    beneficii: [
-      "Tot din Start",
-      "Până la 10 căutări pe zi",
-      "Contactezi 20 de candidați / lună",
-      "Suport pe email",
-    ],
+    beneficii: ["Plan retras din vânzare"],
   },
   {
     tip: "PLATINUM",
     nume: "Prestige",
     numeEn: "Prestige",
     pretLunar: 169.99,
-    evidentiat: true,
+    ascuns: true,
     clasaAccent: ACCENT.PLATINUM,
-    beneficii: [
-      "Tot din Avânt",
-      "Radar de candidați: profiluri potrivite cu posturile tale",
-      "Căutări nelimitate",
-      "Contacte nelimitate",
-      "Companie evidențiată în listă",
-    ],
+    beneficii: ["Plan retras din vânzare"],
   },
   {
     tip: "UNLIMITED",
     nume: "Nelimitat",
     numeEn: "Unlimited",
-    pretLunar: 199.99,
+    pretLunar: 899,
+    evidentiat: true,
     clasaAccent: ACCENT.UNLIMITED,
     beneficii: [
-      "Tot din Prestige",
-      "Badge „Verificat”",
-      "Suport prioritar dedicat",
-      "Acces anticipat la funcții noi",
+      "Tot din Start",
+      "Răspunsuri nelimitate, fără credite",
+      "Radar de candidați",
+      "Badge „Firmă verificată”",
+      "Companie promovată în directorul public",
     ],
   },
 ];

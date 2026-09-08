@@ -670,7 +670,17 @@
     "offline": "Offline",
     "lastSeen": "Last active: {when}",
     "seen": "Seen",
-    "privateNote": "Private conversation — visible only to you and the other person."
+    "privateNote": "Private conversation — visible only to you and the other person.",
+    "unlock": {
+      "title": "{count, plural, one {You received # reply} other {You received # replies}}",
+      "freeLeft": "{count, plural, one {Unlocking is free — you have # free reply left this month.} other {Unlocking is free — you have # free replies left this month.}}",
+      "willUseCredit": "{count, plural, one {This uses 1 credit. You have # credit available.} other {This uses 1 credit. You have # credits available.}}",
+      "needCredits": "You are out of credits. Buy a pack to read this reply.",
+      "cta": "Unlock the reply",
+      "buyCta": "Buy credits",
+      "working": "Unlocking…",
+      "noCredits": "You have no credits left."
+    }
   },
   "admin": {
     "dashboardTitle": "Admin panel",
@@ -1038,5 +1048,15 @@
     "disclaimer": "Informational summaries, with a link to the original source. Not legal advice.",
     "empty": "No articles published yet. Check back soon.",
     "source": "Source"
+  },
+  "credite": {
+    "title": "You only pay when someone replies",
+    "subtitle": "Search for free and send as many messages as you like. A credit is used only when a candidate replies and you choose to open that reply. If nobody replies, you pay nothing.",
+    "balance": "{count, plural, =0 {You have no credits} one {You have # credit} other {You have # credits}}",
+    "freeLeft": "{count, plural, one {(+ # free reply this month)} other {(+ # free replies this month)}}",
+    "packSize": "{count, plural, one {# reply} other {# replies}}",
+    "perReply": "{price} lei per reply",
+    "noExpiry": "Credits never expire.",
+    "buy": "Buy"
   }
 }

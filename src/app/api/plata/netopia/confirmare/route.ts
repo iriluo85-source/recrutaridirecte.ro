@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verificaConfirmareNetopia } from "@/lib/netopia";
 import { activeazaAbonament } from "@/lib/abonamente";
-import { emiteFacturaAbonament } from "@/lib/oblio";
+import { emiteFacturaAbonament, emiteFacturaCredite } from "@/lib/oblio";
+import { estePachetCredite, gasestePachet, adaugaCredite } from "@/lib/credite";
 
 // Endpoint server-to-server apelat de Netopia după fiecare plată (IPN).
 // URL public de configurat în contul Netopia: {APP_URL}/api/plata/netopia/confirmare
@@ -38,12 +39,38 @@ export async function POST(req: NextRequest) {
       });
 
       if (upd.count === 1) {
-        await activeazaAbonament(payment.userId, payment.planTip);
+        // O comandă e fie un abonament, fie un pachet de credite — `planTip`
+        // ține în ambele cazuri identificatorul produsului cumpărat.
+        const pachet = estePachetCredite(payment.planTip)
+          ? gasestePachet(payment.planTip)
+          : undefined;
+
+        if (pachet) {
+          const employer = await prisma.employerProfile.findUnique({
+            where: { userId: payment.userId },
+            select: { id: true },
+          });
+          if (employer) {
+            await adaugaCredite(
+              employer.id,
+              pachet.credite,
+              `Pachet ${pachet.credite} răspunsuri · comanda ${rezultat.orderID}`
+            );
+          } else {
+            console.error(
+              `[plata] Pachet de credite plătit fără profil de angajator: user ${payment.userId}, comanda ${rezultat.orderID}`
+            );
+          }
+        } else {
+          await activeazaAbonament(payment.userId, payment.planTip);
+        }
 
         // Factură automată în Oblio → e-Factura. Ne-blocant: dacă eșuează, nu
         // respingem plata (se poate reemite din Oblio).
         try {
-          const factura = await emiteFacturaAbonament(payment.userId, payment.planTip);
+          const factura = pachet
+            ? await emiteFacturaCredite(payment.userId, pachet.credite, payment.suma)
+            : await emiteFacturaAbonament(payment.userId, payment.planTip);
           if (!factura.emisa && factura.eroare !== "Oblio neconfigurat") {
             console.error("[plata] Factura Oblio nu a fost emisă:", factura.eroare);
           }

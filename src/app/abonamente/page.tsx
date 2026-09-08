@@ -11,7 +11,13 @@ import {
   abonamentEfectiv,
   PERIOADE_ABONAMENT,
 } from "@/lib/planuri";
-import { anuleazaAbonamentAction, initiazaPlataNetopiaAction } from "./actions";
+import { anuleazaAbonamentAction, initiazaPlataNetopiaAction, initiazaPlataCrediteAction } from "./actions";
+import {
+  PACHETE_CREDITE,
+  pretPerRaspuns,
+  soldCredite,
+  raspunsuriGratuiteRamase,
+} from "@/lib/credite";
 import { platiActive } from "@/lib/netopia";
 
 export async function generateMetadata() {
@@ -25,6 +31,7 @@ export default async function AbonamentePage({
   searchParams: Promise<{ rol?: string; activat?: string; anulat?: string; perioada?: string; eroare?: string }>;
 }) {
   const t = await getTranslations("plans");
+  const tCr = await getTranslations("credite");
   const locale = await getLocale();
   const sp = await searchParams;
   const perioada = perioadaValida(sp.perioada);
@@ -39,11 +46,29 @@ export default async function AbonamentePage({
 
   // Rolul pentru care afișăm planurile: dacă e logat, rolul lui; altfel din ?rol=
   const rolAfisat = session?.user.role ?? (sp.rol === "angajator" ? "EMPLOYER" : "CANDIDATE");
-  const planuri = planuriPentruRol(rolAfisat);
+  // Planurile retrase din vânzare nu se mai afișează — dar rămân vizibile pentru
+  // firma care încă are unul, ca să-și vadă abonamentul curent.
+  const planuri = planuriPentruRol(rolAfisat).filter((p) => !p.ascuns || p.tip === tipCurent);
   const esteVizitator = !session?.user.role;
 
   const fmtData = (d: Date) =>
     new Date(d).toLocaleDateString(locale === "ro" ? "ro-RO" : "en-GB");
+
+  // Soldul de credite al firmei — doar pentru angajatorul logat, pe profilul lui.
+  let sold: number | null = null;
+  let gratuite: number | null = null;
+  if (session?.user.role === "EMPLOYER") {
+    const employer = await prisma.employerProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { id: true },
+    });
+    if (employer) {
+      [sold, gratuite] = await Promise.all([
+        soldCredite(employer.id),
+        raspunsuriGratuiteRamase(employer.id),
+      ]);
+    }
+  }
 
   // Formatează prețurile cu 2 zecimale (virgulă la RO, punct la EN).
   const fmtPret = (n: number) =>
@@ -66,6 +91,61 @@ export default async function AbonamentePage({
           ))}
         </div>
       </div>
+
+      {rolAfisat === "EMPLOYER" && (
+        <section className="mt-10">
+          <div className="rounded-lg border border-accent/40 bg-accent/5 p-5">
+            <h2 className="text-xl font-semibold">{tCr("title")}</h2>
+            <p className="mt-1 max-w-2xl text-sm text-muted">{tCr("subtitle")}</p>
+            {sold !== null && (
+              <p className="mt-3 text-sm font-medium">
+                {tCr("balance", { count: sold })}
+                {gratuite !== null && gratuite > 0 && (
+                  <span className="ml-2 font-normal text-muted">
+                    {tCr("freeLeft", { count: gratuite })}
+                  </span>
+                )}
+              </p>
+            )}
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {PACHETE_CREDITE.map((p) => (
+              <div
+                key={p.id}
+                className={`card flex flex-col ${
+                  p.evidentiat ? "border-accent ring-1 ring-accent/30" : ""
+                }`}
+              >
+                <p className="text-2xl font-semibold">{tCr("packSize", { count: p.credite })}</p>
+                <p className="mt-1 text-sm text-muted">
+                  {tCr("perReply", { price: fmtPret(pretPerRaspuns(p)) })}
+                </p>
+                <p className="mt-4 text-3xl font-semibold">
+                  {fmtPret(p.pret)}{" "}
+                  <span className="text-base font-normal text-muted">lei</span>
+                </p>
+                <p className="mt-1 text-xs text-muted">{tCr("noExpiry")}</p>
+                {platiActive() && session?.user.role === "EMPLOYER" ? (
+                  <form action={initiazaPlataCrediteAction} className="mt-auto pt-4">
+                    <input type="hidden" name="pachet" value={p.id} />
+                    <button type="submit" className="btn-primary w-full">
+                      {tCr("buy")}
+                    </button>
+                  </form>
+                ) : (
+                  <Link
+                    href="/inregistrare?rol=EMPLOYER"
+                    className="btn-secondary mt-auto w-full text-center"
+                  >
+                    {tCr("buy")}
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="mx-auto mt-8 flex w-fit items-center gap-1 rounded-full border border-line bg-surface/60 p-1 backdrop-blur-md">
         {PERIOADE_ABONAMENT.map((p) => {

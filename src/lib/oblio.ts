@@ -176,3 +176,37 @@ export async function emiteFacturaAbonament(
     pretCuTva: pret,
   });
 }
+
+/**
+ * Factură pentru un pachet de credite (răspunsuri deblocate). Separată de cea de
+ * abonament pentru că denumirea ajunge pe un document fiscal real — „Abonament
+ * CREDITE_15" nu ar descrie nimic pentru contabilitate.
+ */
+export async function emiteFacturaCredite(
+  userId: string,
+  credite: number,
+  suma: number
+): Promise<RezultatFactura> {
+  if (!FACTURARE_ACTIVA) return { emisa: false, eroare: "Oblio neconfigurat" };
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      email: true,
+      facturareDenumire: true,
+      facturareCui: true,
+      facturareAdresa: true,
+      employerProfile: { select: { numeCompanie: true } },
+    },
+  });
+  if (!user) return { emisa: false, eroare: "utilizator inexistent" };
+
+  return emiteFactura({
+    numeClient: user.facturareDenumire || user.employerProfile?.numeCompanie || user.email,
+    emailClient: user.email,
+    cifClient: user.facturareCui ?? null,
+    adresaClient: user.facturareAdresa ?? null,
+    denumireProdus: `Pachet ${credite} răspunsuri deblocate`,
+    pretCuTva: suma,
+  });
+}

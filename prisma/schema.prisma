@@ -235,6 +235,7 @@ model EmployerProfile {
   posturi       Post[]
   savedCandidates SavedCandidate[]
   savedSearches SavedSearch[]
+  crediteTranzactii CreditTranzactie[]
 }
 
 // Un "post" = o poziție deschisă pe care compania recrutează. Nu e anunț public la
@@ -387,5 +388,23 @@ model SavedCandidate {
   updatedAt   DateTime         @updatedAt
 
   @@unique([employerId, candidateId])
+  @@index([employerId])
+}
+
+
+// Registru de credite pentru angajatori. Soldul = suma cantitatilor.
+// Un credit se consuma o SINGURA data per conversatie: conversationId e unic,
+// deci baza de date garanteaza ca o firma nu poate fi taxata de doua ori
+// pentru acelasi candidat, oricate mesaje ar urma.
+model CreditTranzactie {
+  id             String          @id @default(cuid())
+  employerId     String
+  employer       EmployerProfile @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  tip            String // CUMPARARE | CONSUM | GRATUIT | AJUSTARE
+  cantitate      Int // + adauga, - consuma, 0 pentru raspunsurile gratuite lunare
+  conversationId String?         @unique // setat pe CONSUM/GRATUIT — cheia de idempotenta
+  descriere      String?
+  createdAt      DateTime        @default(now())
+
   @@index([employerId])
 }

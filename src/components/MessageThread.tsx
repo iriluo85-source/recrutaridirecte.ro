@@ -36,6 +36,13 @@ export default function MessageThread({
   const [fisier, setFisier] = useState<File | null>(null);
   const [eroare, setEroare] = useState<string | null>(null);
   const [seTrimite, setSeTrimite] = useState(false);
+  const [blocaj, setBlocaj] = useState<{
+    blocat: boolean;
+    raspunsuriBlocate: number;
+    soldCredite: number;
+    gratuiteRamase: number;
+  } | null>(null);
+  const [seDeblocheaza, setSeDeblocheaza] = useState(false);
   const listaRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -46,6 +53,16 @@ export default function MessageThread({
     setMesaje(data.messages);
     setPrezenta(data.prezenta ?? null);
     setSeenLa(data.seenLa ?? null);
+    setBlocaj(
+      data.blocat
+        ? {
+            blocat: true,
+            raspunsuriBlocate: data.raspunsuriBlocate ?? 0,
+            soldCredite: data.soldCredite ?? 0,
+            gratuiteRamase: data.gratuiteRamase ?? 0,
+          }
+        : null
+    );
   }
 
   useEffect(() => {
@@ -109,8 +126,52 @@ export default function MessageThread({
     refetch();
   }
 
+  async function deblocheaza() {
+    setSeDeblocheaza(true);
+    setEroare(null);
+    const res = await fetch(`/api/mesaje/${conversationId}/deblocheaza`, { method: "POST" });
+    setSeDeblocheaza(false);
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      setEroare(data?.error === "FARA_CREDITE" ? t("unlock.noCredits") : t("sendFailed"));
+      return;
+    }
+    refetch();
+  }
+
   return (
     <div className="card flex h-[70vh] flex-col">
+      {blocaj?.blocat && (
+        <div className="mb-3 rounded-lg border border-amber-400/50 bg-amber-400/5 p-4">
+          <p className="font-medium">
+            {t("unlock.title", { count: blocaj.raspunsuriBlocate })}
+          </p>
+          <p className="mt-1 text-sm text-muted">
+            {blocaj.gratuiteRamase > 0
+              ? t("unlock.freeLeft", { count: blocaj.gratuiteRamase })
+              : blocaj.soldCredite > 0
+                ? t("unlock.willUseCredit", { count: blocaj.soldCredite })
+                : t("unlock.needCredits")}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {blocaj.gratuiteRamase > 0 || blocaj.soldCredite > 0 ? (
+              <button
+                type="button"
+                onClick={deblocheaza}
+                disabled={seDeblocheaza}
+                className="btn-primary disabled:opacity-60"
+              >
+                {seDeblocheaza ? t("unlock.working") : t("unlock.cta")}
+              </button>
+            ) : (
+              <a href="/abonamente" className="btn-primary">
+                {t("unlock.buyCta")}
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+
       {prezenta && (
         <div className="mb-3 flex items-center gap-2 border-b border-line pb-2.5 text-xs">
           <span

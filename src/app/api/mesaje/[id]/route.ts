@@ -11,6 +11,12 @@ import {
 } from "@/lib/chat";
 import { existaBlocaj } from "@/lib/moderare";
 import { esteActiv } from "@/lib/prezenta";
+import {
+  esteDeblocata,
+  esteScutitDeCredite,
+  soldCredite,
+  raspunsuriGratuiteRamase,
+} from "@/lib/credite";
 
 export async function GET(
   _req: NextRequest,
@@ -59,6 +65,35 @@ export async function GET(
     }),
   ]);
 
+  // Gating pe plată: angajatorul vede răspunsurile candidatului doar după ce a
+  // deblocat conversația. Redactarea se face AICI, pe server — conținutul nu
+  // pleacă spre browser deloc. Candidatul nu e afectat în niciun fel.
+  let blocat = false;
+  let raspunsuriBlocate = 0;
+  let sold = 0;
+  let gratuiteRamase = 0;
+  let mesajeVizibile = messages;
+
+  if (isEmployer) {
+    // Abonatul Nelimitat nu vede lacătul deloc — a plătit pentru răspunsuri nelimitate.
+    const deblocata =
+      (await esteDeblocata(id)) || (await esteScutitDeCredite(conversation.employerId));
+    const raspunsuri = messages.filter((m) => m.trimisDe === "CANDIDATE");
+    if (!deblocata && raspunsuri.length > 0) {
+      blocat = true;
+      raspunsuriBlocate = raspunsuri.length;
+      mesajeVizibile = messages.map((m) =>
+        m.trimisDe === "CANDIDATE" ? { ...m, continut: null, atasamentNume: null } : m
+      );
+    }
+    if (blocat) {
+      [sold, gratuiteRamase] = await Promise.all([
+        soldCredite(conversation.employerId),
+        raspunsuriGratuiteRamase(conversation.employerId),
+      ]);
+    }
+  }
+
   // „văzut": momentul în care celălalt participant a citit ultima dată conversația
   // (valoarea de dinainte de acest request — eu tocmai mi-am actualizat doar pointerul meu)
   const seenLa = isEmployer
@@ -66,7 +101,11 @@ export async function GET(
     : conversation.employerCititLa;
 
   return NextResponse.json({
-    messages,
+    messages: mesajeVizibile,
+    blocat,
+    raspunsuriBlocate,
+    soldCredite: sold,
+    gratuiteRamase,
     prezenta: {
       activ: esteActiv(celalalt?.ultimaActivitate),
       ultimaActivitate: celalalt?.ultimaActivitate ?? null,

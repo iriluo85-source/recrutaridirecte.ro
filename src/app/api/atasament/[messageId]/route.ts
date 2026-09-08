@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getConversationForUser } from "@/lib/chat";
+import { esteDeblocata } from "@/lib/credite";
 
 export async function GET(
   _req: NextRequest,
@@ -23,6 +24,16 @@ export async function GET(
   const access = await getConversationForUser(message.conversationId, session.user.id);
   if (!access) {
     return NextResponse.json({ error: "Neautorizat" }, { status: 403 });
+  }
+
+  // Atașamentele candidatului sunt parte din răspuns: fără deblocare, nu se descarcă.
+  // Fără verificarea asta, linkul direct ar fi o portiță prin gating-ul din /api/mesaje.
+  if (
+    access.isEmployer &&
+    message.trimisDe === "CANDIDATE" &&
+    !(await esteDeblocata(message.conversationId))
+  ) {
+    return NextResponse.json({ error: "Răspuns neblocat" }, { status: 402 });
   }
 
   const filePath = path.join(

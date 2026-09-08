@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { gasestePlan } from "@/lib/planuri";
 import { activeazaAbonament } from "@/lib/abonamente";
 import { platiActive, initiazaPlataNetopia } from "@/lib/netopia";
+import { gasestePachet } from "@/lib/credite";
 
 // Inițiază o plată reală prin Netopia: creează comanda (Payment PENDING), cere un
 // paymentURL securizat și redirecționează userul pe pagina Netopia. Abonamentul se
@@ -51,6 +52,60 @@ export async function initiazaPlataNetopiaAction(formData: FormData) {
 
   if (!url) redirect("/abonamente?eroare=plata");
   redirect(url); // → pagina securizată Netopia (cardul nu atinge site-ul nostru)
+}
+
+// Cumpărarea unui pachet de credite (răspunsuri deblocate). Merge pe exact
+// același drum ca abonamentul — Payment PENDING → Netopia → IPN — doar că la
+// confirmare se adaugă credite în loc să se activeze un abonament.
+export async function initiazaPlataCrediteAction(formData: FormData) {
+  const session = await auth();
+  if (!session?.user) redirect("/login");
+  if (session.user.role !== "EMPLOYER") redirect("/abonamente");
+  if (!platiActive()) redirect("/abonamente");
+
+  const pachet = gasestePachet(String(formData.get("pachet") || ""));
+  if (!pachet) redirect("/abonamente");
+
+  const orderId = `RD${Date.now()}${Math.random().toString(36).slice(2, 8)}`;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    include: { employerProfile: true },
+  });
+  if (!user) redirect("/login");
+
+  await prisma.payment.create({
+    data: {
+      orderID: orderId,
+      userId: user.id,
+      planTip: pachet.id,
+      suma: pachet.pret,
+      status: "PENDING",
+    },
+  });
+
+  let url: string | null = null;
+  try {
+    url = await initiazaPlataNetopia({
+      orderId,
+      planTip: pachet.id,
+      suma: pachet.pret,
+      billing: {
+        email: user.email,
+        phone: user.telefon,
+        nume: user.employerProfile?.numeCompanie ?? null,
+        oras: user.employerProfile?.locatie ?? null,
+      },
+    });
+  } catch (e) {
+    console.error("[plata] Inițierea Netopia pentru credite a eșuat:", e);
+    await prisma.payment
+      .update({ where: { orderID: orderId }, data: { status: "FAILED" } })
+      .catch(() => {});
+  }
+
+  if (!url) redirect("/abonamente?eroare=plata");
+  redirect(url);
 }
 
 // SIMULARE — activează un abonament FĂRĂ plată reală. Folosită DOAR cât timp plățile
