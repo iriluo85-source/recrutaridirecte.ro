@@ -62,7 +62,15 @@ function cheieOras(loc: string): string {
   return normalizeazaText(loc).trim();
 }
 
-export function agregheaza(candidati: CandidatAgregat[]): Disponibilitate {
+/**
+ *  = de la câți candidați în sus publicăm un oraș. Existența lui ca
+ * PARAMETRU contează: altfel un apelant care cere un prag mai mic primea tăcut
+ * lista deja filtrată la 3 și nu avea cum să afle.
+ */
+export function agregheaza(
+  candidati: CandidatAgregat[],
+  pragOras: number = PRAG_MINIM_ORAS
+): Disponibilitate {
   const total = candidati.length;
 
   // Grupăm insensibil la diacritice, dar afișăm forma cea mai frecventă scrisă de oameni.
@@ -90,7 +98,7 @@ export function agregheaza(candidati: CandidatAgregat[]): Disponibilitate {
       });
       return { oras: eticheta, candidati: g.n };
     })
-    .filter((o) => o.candidati >= PRAG_MINIM_ORAS)
+    .filter((o) => o.candidati >= pragOras)
     .sort((a, b) => b.candidati - a.candidati);
 
   const salarii = candidati
@@ -145,7 +153,7 @@ export function oraseCuCandidati(
   candidati: CandidatAgregat[],
   pragMinim = PRAG_MINIM_ORAS
 ): OrasDisponibil[] {
-  return agregheaza(candidati).orase.filter((o) => o.candidati >= pragMinim);
+  return agregheaza(candidati, pragMinim).orase;
 }
 
 export function candidatiDinOras(
