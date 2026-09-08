@@ -879,7 +879,8 @@
     "howItWorks": "Cum funcționează",
     "student": "Student −50%",
     "creditsCount": "{count, plural, =0 {Fără răspunsuri} one {# răspuns} few {# răspunsuri} other {# de răspunsuri}}",
-    "creditsUnlimited": "Răspunsuri nelimitate"
+    "creditsUnlimited": "Răspunsuri nelimitate",
+    "available": "Candidați disponibili"
   },
   "common": {
     "save": "Salvează",
@@ -1149,5 +1150,30 @@
     "applyBudget": "Caută cu bugetul {salariu} lei",
     "insight": "Dacă urci de la {de} la {la} lei, ajungi la încă {castig, plural, one {# candidat} few {# candidați} other {# de candidați}}.",
     "noSalaryNote": "{count, plural, one {# candidat nu și-a declarat salariul, deci apare la orice buget.} few {# candidați nu și-au declarat salariul, deci apar la orice buget.} other {# de candidați nu și-au declarat salariul, deci apar la orice buget.}}"
+  },
+  "disponibili": {
+    "indexTitle": "Candidați disponibili acum",
+    "indexSubtitle": "Câți oameni caută de lucru chiar acum pe Recrutare Directă, pe domenii și orașe. Cifre reale, actualizate în timp real.",
+    "countBadge": "{count, plural, one {# candidat în total} few {# candidați în total} other {# de candidați în total}}",
+    "available": "{count, plural, one {# candidat disponibil} few {# candidați disponibili} other {# de candidați disponibili}}",
+    "pageTitle": "{domeniu} — candidați disponibili",
+    "metaDesc": "Vezi câți candidați din {domeniu} caută de lucru acum, în ce orașe și la ce salariu. Căutarea e gratuită pentru angajatori.",
+    "salaryRange": "Salariu așteptat: {min} – {max} lei",
+    "backToIndex": "Toate domeniile",
+    "byCity": "Pe orașe",
+    "empty": "Încă nu avem destui candidați pentru o defalcare publică.",
+    "emptyDomain": "Momentan nu avem candidați în acest domeniu.",
+    "stats": {
+      "median": "Salariu median cerut",
+      "experience": "Experiență medie",
+      "years": "{count} ani",
+      "licence": "Cu permis de conducere",
+      "travel": "Dispuși la deplasări",
+      "remote": "Deschiși la remote"
+    },
+    "ctaTitle": "Vrei să vorbești cu ei?",
+    "ctaDesc": "Îți faci cont de angajator gratuit, cauți nelimitat și le scrii câte mesaje vrei. Plătești abia când un candidat îți răspunde și tu vrei să-i deschizi răspunsul.",
+    "ctaButton": "Creează cont de angajator",
+    "privacyNote": "Pe această pagină apar doar cifre agregate. Numele, CV-ul și datele de contact ale candidaților sunt vizibile doar angajatorilor autentificați."
   }
 }

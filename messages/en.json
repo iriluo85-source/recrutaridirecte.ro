@@ -879,7 +879,8 @@
     "howItWorks": "How it works",
     "student": "Student −50%",
     "creditsCount": "{count, plural, =0 {No replies left} one {# reply} other {# replies}}",
-    "creditsUnlimited": "Unlimited replies"
+    "creditsUnlimited": "Unlimited replies",
+    "available": "Available candidates"
   },
   "common": {
     "save": "Save",
@@ -1149,5 +1150,30 @@
     "applyBudget": "Search with a {salariu} lei budget",
     "insight": "Going from {de} to {la} lei reaches {castig, plural, one {# more candidate} other {# more candidates}}.",
     "noSalaryNote": "{count, plural, one {# candidate has not stated a salary, so they appear at any budget.} other {# candidates have not stated a salary, so they appear at any budget.}}"
+  },
+  "disponibili": {
+    "indexTitle": "Candidates available now",
+    "indexSubtitle": "How many people are looking for work on Recrutare Directă right now, by field and city. Real numbers, updated live.",
+    "countBadge": "{count, plural, one {# candidate in total} other {# candidates in total}}",
+    "available": "{count, plural, one {# candidate available} other {# candidates available}}",
+    "pageTitle": "{domeniu} — available candidates",
+    "metaDesc": "See how many {domeniu} candidates are looking for work now, in which cities and at what salary. Searching is free for employers.",
+    "salaryRange": "Expected salary: {min} – {max} lei",
+    "backToIndex": "All fields",
+    "byCity": "By city",
+    "empty": "We do not have enough candidates yet for a public breakdown.",
+    "emptyDomain": "No candidates in this field at the moment.",
+    "stats": {
+      "median": "Median salary asked",
+      "experience": "Average experience",
+      "years": "{count} years",
+      "licence": "With a driving licence",
+      "travel": "Willing to travel",
+      "remote": "Open to remote"
+    },
+    "ctaTitle": "Want to talk to them?",
+    "ctaDesc": "Create a free employer account, search without limits and send as many messages as you like. You pay only when a candidate replies and you choose to open that reply.",
+    "ctaButton": "Create an employer account",
+    "privacyNote": "This page shows aggregate numbers only. Candidate names, CVs and contact details are visible only to signed-in employers."
   }
 }

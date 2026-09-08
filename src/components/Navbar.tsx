@@ -21,7 +21,7 @@ export default async function Navbar() {
   if (!session) {
     links = [
       { href: "/companii", label: t("companies") },
-      { href: "/#cum-functioneaza", label: t("howItWorks") },
+      { href: "/disponibili", label: t("available") },
       { href: "/abonamente", label: t("plans") },
       { href: "/login", label: t("login") },
       { href: "/inregistrare", label: t("createAccount"), primary: true },

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { SELECT_DIRECTOR, companiiActive } from "@/lib/companii";
+import { DOMENII } from "@/lib/domenii";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 
@@ -14,6 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const rute = [
     "",
     "/companii",
+    "/disponibili",
     "/abonamente",
     "/despre",
     "/contact",
@@ -50,5 +52,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     companii = [];
   }
 
-  return [...statice, ...companii];
+  // Paginile publice de disponibilitate: intrarea prin Google a angajatorilor.
+  const disponibili: MetadataRoute.Sitemap = DOMENII.map((d) => ({
+    url: `${APP_URL}/disponibili/${d.slug}`,
+    changeFrequency: "daily" as const,
+    priority: 0.8,
+  }));
+
+  return [...statice, ...disponibili, ...companii];
 }
