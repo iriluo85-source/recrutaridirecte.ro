@@ -159,3 +159,43 @@ export async function trimiteEmailProfilIncomplet(to: string): Promise<boolean> 
   </div>`;
   return sendEmail({ to, subject: "Completează-ți profilul ca să te găsească angajatorii", html });
 }
+
+// Confirmarea că verificarea de student/elev a trecut — campania Back to School.
+export async function trimiteEmailStudentValidat(to: string): Promise<boolean> {
+  const url = process.env.APP_URL || "https://www.recrutaridirecte.ro";
+  const html = `
+  <div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#111">
+    <h2 style="margin:0 0 12px">Contul tău de student a fost validat 🎓</h2>
+    <p>Salut,</p>
+    <p><strong>Am verificat legitimația și totul e în regulă.</strong> Reducerea de 50% e activă pe contul tău.</p>
+    <p>Se aplică automat la orice abonament de candidat, pe toată luna septembrie. Nu ai de introdus niciun cod.</p>
+    <p style="margin:20px 0">
+      <a href="${url}/abonamente" style="background:#16a34a;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;display:inline-block">Vezi abonamentele cu 50% reducere</a>
+    </p>
+    <p style="color:#888;font-size:12px;margin-top:24px">Poza legitimației a fost ștearsă de pe serverele noastre după verificare.</p>
+  </div>`;
+  return sendEmail({ to, subject: "Contul tău de student a fost validat 🎓", html });
+}
+
+// Cererea de verificare a fost respinsă — cu motivul, ca să poată retrimite.
+export async function trimiteEmailStudentRespins(
+  to: string,
+  motiv: string | null
+): Promise<boolean> {
+  const url = process.env.APP_URL || "https://www.recrutaridirecte.ro";
+  const explicatie = motiv
+    ? `<p><strong>Motivul:</strong> ${escapeHtml(motiv)}</p>`
+    : `<p>Poza nu a putut fi citită suficient de clar.</p>`;
+  const html = `
+  <div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#111">
+    <h2 style="margin:0 0 12px">Verificarea de student nu a trecut</h2>
+    <p>Salut,</p>
+    ${explicatie}
+    <p>Poți încerca din nou oricând — durează un minut. Ai grijă să se vadă clar numele, instituția și anul școlar.</p>
+    <p style="margin:20px 0">
+      <a href="${url}/candidat/student" style="background:#16a34a;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;display:inline-block">Încearcă din nou</a>
+    </p>
+    <p style="color:#888;font-size:12px;margin-top:24px">Poza trimisă a fost ștearsă de pe serverele noastre.</p>
+  </div>`;
+  return sendEmail({ to, subject: "Verificarea de student nu a trecut", html });
+}

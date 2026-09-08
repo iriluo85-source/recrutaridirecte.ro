@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
+import { campanieActiva } from "@/lib/student";
 import { resendVerificationAction } from "@/app/(auth)/actions";
 import ThemeToggle from "./ThemeToggle";
 import LanguageToggle from "./LanguageToggle";
@@ -37,6 +38,8 @@ export default async function Navbar() {
       { href: "/candidat/oferte", label: t("myOffers") },
       { href: "/candidat/radar", label: t("radar") },
       { href: "/candidat/cv-pilot", label: t("cvPilot") },
+      // Linkul apare doar cât ține campania — altfel ar promite o reducere expirată.
+      ...(campanieActiva() ? [{ href: "/candidat/student", label: t("student") }] : []),
       { href: "/abonamente", label: t("plans") },
       { href: "/setari", label: t("settings") },
     ];

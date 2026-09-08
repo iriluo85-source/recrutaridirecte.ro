@@ -8,6 +8,7 @@ import { gasestePlan } from "@/lib/planuri";
 import { activeazaAbonament } from "@/lib/abonamente";
 import { platiActive, initiazaPlataNetopia } from "@/lib/netopia";
 import { gasestePachet } from "@/lib/credite";
+import { reducereStudent, cuReducereStudent } from "@/lib/student";
 
 // Inițiază o plată reală prin Netopia: creează comanda (Payment PENDING), cere un
 // paymentURL securizat și redirecționează userul pe pagina Netopia. Abonamentul se
@@ -21,7 +22,8 @@ export async function initiazaPlataNetopiaAction(formData: FormData) {
   const plan = gasestePlan(session.user.role, tip);
   if (!plan || plan.tip === "FREE") redirect("/abonamente");
 
-  const suma = plan.pretLunar; // deocamdată abonament lunar
+  // Aceeași funcție ca pe pagina de prețuri: ce vede studentul e ce plătește.
+  const suma = cuReducereStudent(plan.pretLunar, await reducereStudent(session.user.id));
   const orderId = `RD${Date.now()}${Math.random().toString(36).slice(2, 8)}`; // unic, alfanumeric
 
   const user = await prisma.user.findUnique({

@@ -90,7 +90,9 @@
       "submitting": "Creating account...",
       "or": "or",
       "haveAccount": "Already have an account?",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "student": "I am a student or pupil",
+      "studentHint": "We verify your student ID and you get 50% off any plan, throughout September."
     },
     "forgotPassword": {
       "title": "Forgot your password?",
@@ -856,7 +858,8 @@
     "noNotifications": "No notifications.",
     "home": "Home",
     "companies": "Companies",
-    "howItWorks": "How it works"
+    "howItWorks": "How it works",
+    "student": "Student −50%"
   },
   "common": {
     "save": "Save",
@@ -1058,5 +1061,62 @@
     "perReply": "{price} lei per reply",
     "noExpiry": "Credits never expire.",
     "buy": "Buy"
+  },
+  "backToSchool": {
+    "eyebrow": "{count, plural, one {September · # day left} other {September · # days left}}",
+    "subtitle": "Are you a student or an adult pupil? Verify your student ID and get 50% off any plan, all September long.",
+    "cta": "Verify as a student",
+    "ctaNote": "Takes a minute. You photograph your ID right in the app.",
+    "discountLabel": "on any plan"
+  },
+  "student": {
+    "title": "Student verification",
+    "subtitle": "Confirm you are a student or an adult pupil and get {percent}% off any plan.",
+    "banner": {
+      "daysLeft": "{count, plural, one {# day left in the campaign} other {# days left in the campaign}}",
+      "ended": "The campaign has ended"
+    },
+    "how": {
+      "title": "How it works",
+      "step1": "Pick your document type and photograph your student ID or pupil card.",
+      "step2": "We review it — usually within a few minutes.",
+      "step3": "You get a confirmation email and the discount applies automatically."
+    },
+    "form": {
+      "docType": "Which document do you have",
+      "docStudent": "Student ID",
+      "docPupil": "Pupil card",
+      "institution": "School or university",
+      "institutionPlaceholder": "e.g. West University of Timișoara",
+      "declare18": "I declare that I am 18 or older and that this document belongs to me.",
+      "submit": "Send for verification",
+      "sending": "Sending…",
+      "privacyNote": "The photo is used only to confirm you are a student and is deleted from our servers as soon as the request is decided."
+    },
+    "capture": {
+      "intro": "Take a clear photo showing your name, institution and school year. Your browser will ask permission to use the camera.",
+      "openCamera": "Open camera",
+      "chooseFile": "Choose a photo",
+      "take": "Take photo",
+      "cancel": "Cancel",
+      "retake": "Retake",
+      "previewAlt": "Photo of the student ID",
+      "checkReadable": "Check that the text is readable. If not, retake it."
+    },
+    "state": {
+      "validTitle": "Your student account is verified 🎓",
+      "validDesc": "The {percent}% discount applies automatically to any plan until the end of September.",
+      "seePlans": "See plans",
+      "pendingTitle": "Your request is being reviewed",
+      "pendingDesc": "We are looking at the photo and will email you as soon as it is done. It usually takes a few minutes.",
+      "rejectedTitle": "Your previous request was rejected",
+      "rejectedDefault": "The photo could not be read clearly enough.",
+      "endedTitle": "The campaign has ended",
+      "endedDesc": "The Back to School discount ran through September. Plans remain available at the usual price."
+    },
+    "errors": {
+      "camera": "We could not start the camera. Choose a photo instead.",
+      "upload": "We could not send the photo. Please try again."
+    }
   }
 }

@@ -1,4 +1,5 @@
 import { googleEnabled, microsoftEnabled } from "@/auth";
+import { campanieActiva } from "@/lib/student";
 import RegisterForm from "./RegisterForm";
 
 export default async function InregistrarePage({
@@ -11,7 +12,7 @@ export default async function InregistrarePage({
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 py-12">
-      <RegisterForm
+      <RegisterForm campanieStudent={campanieActiva()}
         defaultRole={defaultRole}
         googleEnabled={googleEnabled}
         microsoftEnabled={microsoftEnabled}

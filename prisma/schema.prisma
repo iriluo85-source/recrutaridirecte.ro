@@ -81,6 +81,7 @@ model User {
   blocksMade       Block[]   @relation("BlocksMade")
   blocksReceived   Block[]   @relation("BlocksReceived")
   testimoniale     Testimonial[]
+  studentVerificare StudentVerificare?
 }
 
 // Plată abonament prin Netopia. Ținem evidența comenzilor (orderID unic) ca să putem:
@@ -407,4 +408,32 @@ model CreditTranzactie {
   createdAt      DateTime        @default(now())
 
   @@index([employerId])
+}
+
+
+enum StudentStatus {
+  IN_ASTEPTARE
+  VALIDAT
+  RESPINS
+}
+
+// Verificarea de student/elev pentru campania Back to School.
+// NOTA: campul fisier tine poza legitimatiei — un act de identitate scolar.
+// Se sterge de pe disc imediat ce cererea e decisa (vezi decideStudentAction).
+// Randul ramane ca dovada a deciziei, dar FARA imagine.
+model StudentVerificare {
+  id              String        @id @default(cuid())
+  userId          String        @unique
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status          StudentStatus @default(IN_ASTEPTARE)
+  tipDocument     String // CARNET_ELEV | LEGITIMATIE_STUDENT
+  institutie      String?
+  fisier          String? // numele pozei; devine null dupa decizie
+  declaratie18    Boolean       @default(false)
+  motivRespingere String?
+  createdAt       DateTime      @default(now())
+  decisLa         DateTime?
+  decisDe         String?
+
+  @@index([status])
 }

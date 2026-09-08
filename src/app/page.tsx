@@ -6,6 +6,7 @@ import { DOMENII } from "@/lib/domenii";
 import { alegeSlideAleator } from "@/lib/hero";
 import { SELECT_DIRECTOR, companiiActive, filtreazaCompanii } from "@/lib/companii";
 import Avatar from "@/components/Avatar";
+import BannerBackToSchool from "@/components/BannerBackToSchool";
 
 // rotunjim în jos la un prag „frumos" ca „Peste N" să rămână mereu adevărat
 function pestePrag(n: number): number {
@@ -221,6 +222,8 @@ export default async function Home({
           </div>
         </div>
       </section>
+
+      <BannerBackToSchool href={isCandidate ? "/candidat/student" : "/inregistrare?rol=CANDIDATE"} />
 
       {/* Intrare în directorul de companii */}
       {companiiPreview.length > 0 && (

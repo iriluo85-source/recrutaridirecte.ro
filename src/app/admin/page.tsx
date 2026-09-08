@@ -40,6 +40,9 @@ export default async function AdminDashboardPage() {
         <Link href="/admin/statistici" className="btn-primary">
           {t("stats.button")}
         </Link>
+        <Link href="/admin/studenti" className="btn-primary">
+          Verificări student
+        </Link>
         <Link href="/admin/utilizatori" className="btn-primary">
           {t("viewAllUsers")}
         </Link>

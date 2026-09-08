@@ -3,6 +3,7 @@
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
+import { campanieActiva } from "@/lib/student";
 import { AuthError } from "next-auth";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
@@ -76,6 +77,11 @@ export async function registerAction(
     throw error;
   }
 
+  // Cine s-a declarat elev/student la înregistrare merge direct la verificare,
+  // cât timp campania e activă — altfel ar trebui să caute singur pagina.
+  if (role === "CANDIDATE" && formData.get("student") === "on" && campanieActiva()) {
+    redirect("/candidat/student");
+  }
   redirect(role === "EMPLOYER" ? "/angajator/profil/editeaza" : "/candidat/profil/editeaza");
 }
 

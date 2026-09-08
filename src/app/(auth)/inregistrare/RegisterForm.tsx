@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import GoogleButton from "@/components/GoogleButton";
@@ -11,13 +11,16 @@ export default function RegisterForm({
   defaultRole,
   googleEnabled,
   microsoftEnabled,
+  campanieStudent = false,
 }: {
   defaultRole: "CANDIDATE" | "EMPLOYER";
   googleEnabled: boolean;
   microsoftEnabled: boolean;
+  campanieStudent?: boolean;
 }) {
   const t = useTranslations("auth");
   const [state, formAction, pending] = useActionState(registerAction, undefined);
+  const [rol, setRol] = useState<"CANDIDATE" | "EMPLOYER">(defaultRole);
 
   return (
     <div className="card">
@@ -33,7 +36,8 @@ export default function RegisterForm({
               type="radio"
               name="role"
               value="CANDIDATE"
-              defaultChecked={defaultRole === "CANDIDATE"}
+              checked={rol === "CANDIDATE"}
+              onChange={() => setRol("CANDIDATE")}
               className="accent-accent"
             />
             {t("register.iAmCandidate")}
@@ -43,7 +47,8 @@ export default function RegisterForm({
               type="radio"
               name="role"
               value="EMPLOYER"
-              defaultChecked={defaultRole === "EMPLOYER"}
+              checked={rol === "EMPLOYER"}
+              onChange={() => setRol("EMPLOYER")}
               className="accent-accent"
             />
             {t("register.iAmEmployer")}
@@ -91,6 +96,16 @@ export default function RegisterForm({
             .
           </span>
         </label>
+
+        {campanieStudent && rol === "CANDIDATE" && (
+          <label className="flex items-start gap-2 rounded-lg border border-accent/40 bg-accent/5 p-3 text-sm">
+            <input type="checkbox" name="student" className="mt-0.5 accent-accent" />
+            <span>
+              <span className="font-medium">{t("register.student")}</span>
+              <span className="mt-0.5 block text-xs text-muted">{t("register.studentHint")}</span>
+            </span>
+          </label>
+        )}
 
         <label className="flex items-start gap-2 text-sm">
           <input type="checkbox" name="newsletter" className="mt-0.5 accent-accent" />

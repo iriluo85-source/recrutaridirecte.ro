@@ -19,6 +19,7 @@ import {
   raspunsuriGratuiteRamase,
 } from "@/lib/credite";
 import { platiActive } from "@/lib/netopia";
+import { reducereStudent, cuReducereStudent, campanieActiva } from "@/lib/student";
 
 export async function generateMetadata() {
   const t = await getTranslations("plans");
@@ -69,6 +70,10 @@ export default async function AbonamentePage({
       ]);
     }
   }
+
+  // Reducerea de student (campania Back to School). Se aplică ȘI la afișare, ȘI la
+  // suma trimisă spre Netopia — sunt calculate din aceeași funcție ca să nu difere.
+  const reducereStud = await reducereStudent(session?.user?.id);
 
   // Formatează prețurile cu 2 zecimale (virgulă la RO, punct la EN).
   const fmtPret = (n: number) =>
@@ -260,7 +265,7 @@ export default async function AbonamentePage({
                 </p>
               ) : (
                 (() => {
-                  const pp = pretPerioada(plan.pretLunar, perioada);
+                  const pp = pretPerioada(cuReducereStudent(plan.pretLunar, reducereStud), perioada);
                   return (
                     <div className="mt-4">
                       <div className="flex items-baseline gap-1.5">

@@ -90,7 +90,9 @@
       "submitting": "Se creează contul...",
       "or": "sau",
       "haveAccount": "Ai deja cont?",
-      "signIn": "Autentifică-te"
+      "signIn": "Autentifică-te",
+      "student": "Sunt elev sau student",
+      "studentHint": "Îți verificăm legitimația și primești 50% reducere la orice abonament, în septembrie."
     },
     "forgotPassword": {
       "title": "Ai uitat parola?",
@@ -856,7 +858,8 @@
     "noNotifications": "Nicio notificare.",
     "home": "Pagina principală",
     "companies": "Companii",
-    "howItWorks": "Cum funcționează"
+    "howItWorks": "Cum funcționează",
+    "student": "Student −50%"
   },
   "common": {
     "save": "Salvează",
@@ -1058,5 +1061,62 @@
     "perReply": "{price} lei per răspuns",
     "noExpiry": "Creditele nu expiră.",
     "buy": "Cumpără"
+  },
+  "backToSchool": {
+    "eyebrow": "{count, plural, one {Septembrie · încă # zi} few {Septembrie · încă # zile} other {Septembrie · încă # de zile}}",
+    "subtitle": "Ești elev major sau student? Verifică-ți legitimația și primești 50% reducere la orice abonament, toată luna septembrie.",
+    "cta": "Verifică-te ca student",
+    "ctaNote": "Durează un minut. Îți facem poza legitimației direct din aplicație.",
+    "discountLabel": "la orice abonament"
+  },
+  "student": {
+    "title": "Verificare student",
+    "subtitle": "Confirmă că ești elev major sau student și primești {percent}% reducere la orice abonament.",
+    "banner": {
+      "daysLeft": "{count, plural, one {Mai e # zi din campanie} few {Mai sunt # zile din campanie} other {Mai sunt # de zile din campanie}}",
+      "ended": "Campania s-a încheiat"
+    },
+    "how": {
+      "title": "Cum funcționează",
+      "step1": "Alegi tipul de document și faci o poză la legitimație sau la carnetul de elev.",
+      "step2": "Ne uităm peste ea — de obicei în câteva minute.",
+      "step3": "Primești un email de confirmare, iar reducerea se aplică automat la abonamente."
+    },
+    "form": {
+      "docType": "Ce document ai",
+      "docStudent": "Legitimație de student",
+      "docPupil": "Carnet de elev",
+      "institution": "Instituția de învățământ",
+      "institutionPlaceholder": "ex: Universitatea de Vest din Timișoara",
+      "declare18": "Declar că am 18 ani împliniți și că documentul îmi aparține.",
+      "submit": "Trimite spre verificare",
+      "sending": "Se trimite…",
+      "privacyNote": "Poza e folosită doar ca să confirmăm că ești elev sau student și se șterge de pe serverele noastre imediat ce cererea e decisă."
+    },
+    "capture": {
+      "intro": "Fă o poză clară, în care se văd numele, instituția și anul școlar. Browserul îți va cere permisiunea de a folosi camera.",
+      "openCamera": "Deschide camera",
+      "chooseFile": "Alege o poză",
+      "take": "Fotografiază",
+      "cancel": "Renunță",
+      "retake": "Refă poza",
+      "previewAlt": "Poza legitimației",
+      "checkReadable": "Verifică dacă scrisul se citește. Dacă nu, refă poza."
+    },
+    "state": {
+      "validTitle": "Contul tău de student e validat 🎓",
+      "validDesc": "Reducerea de {percent}% se aplică automat la orice abonament, până la finalul lunii septembrie.",
+      "seePlans": "Vezi abonamentele",
+      "pendingTitle": "Cererea ta e în verificare",
+      "pendingDesc": "Ne uităm peste poză și îți trimitem un email imediat ce e gata. De obicei durează câteva minute.",
+      "rejectedTitle": "Cererea anterioară a fost respinsă",
+      "rejectedDefault": "Poza nu a putut fi citită suficient de clar.",
+      "endedTitle": "Campania s-a încheiat",
+      "endedDesc": "Reducerea Back to School a fost valabilă în luna septembrie. Abonamentele rămân disponibile la prețul obișnuit."
+    },
+    "errors": {
+      "camera": "Nu am putut porni camera. Alege o poză din galerie.",
+      "upload": "Nu am putut trimite poza. Încearcă din nou."
+    }
   }
 }
