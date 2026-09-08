@@ -222,7 +222,21 @@ export default function MessageThread({
                       : "border border-line bg-surface/60 backdrop-blur-md"
                   }`}
                 >
-                  {m.continut && <p className="whitespace-pre-line">{m.continut}</p>}
+                  {/* Mesaj blocat: serverul trimite continut null. Fără tratarea asta,
+                      bula ar apărea complet goală și ar arăta a defect, nu a lacăt. */}
+                  {blocaj?.blocat && !esteAlMeu && !m.continut && !m.atasamentNume ? (
+                    <div className="relative select-none">
+                      <p aria-hidden="true" className="whitespace-pre-line blur-[5px]">
+                        Bună ziua, sunt interesat de poziție.{"\n"}
+                        Am experiență în domeniu și sunt disponibil.
+                      </p>
+                      <span className="absolute inset-0 flex items-center justify-center gap-1.5 text-xs font-medium">
+                        🔒 {t("unlock.hiddenMessage")}
+                      </span>
+                    </div>
+                  ) : (
+                    m.continut && <p className="whitespace-pre-line">{m.continut}</p>
+                  )}
                   {m.atasamentNume && (
                     <div className="mt-2">
                       {esteImagine(m.atasamentNume) ? (

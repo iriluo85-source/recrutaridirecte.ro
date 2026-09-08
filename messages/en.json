@@ -677,12 +677,13 @@
     "unlock": {
       "title": "{count, plural, one {You received # reply} other {You received # replies}}",
       "freeLeft": "{count, plural, one {Unlocking is free — you have # free reply left this month.} other {Unlocking is free — you have # free replies left this month.}}",
-      "willUseCredit": "{count, plural, one {This uses 1 credit. You have # credit available.} other {This uses 1 credit. You have # credits available.}}",
-      "needCredits": "You are out of credits. Buy a pack to read this reply.",
-      "cta": "Unlock the reply",
-      "buyCta": "Buy credits",
-      "working": "Unlocking…",
-      "noCredits": "You have no credits left."
+      "willUseCredit": "{count, plural, one {This uses 1 reply. You have # left.} other {This uses 1 reply. You have # left.}}",
+      "needCredits": "You have no replies left. Get a pack to read it.",
+      "cta": "Open the reply",
+      "buyCta": "Buy replies",
+      "working": "Opening…",
+      "noCredits": "You have no replies left.",
+      "hiddenMessage": "Reply locked"
     }
   },
   "admin": {
@@ -1057,13 +1058,15 @@
   },
   "credite": {
     "title": "You only pay when someone replies",
-    "subtitle": "Search for free and send as many messages as you like. A credit is used only when a candidate replies and you choose to open that reply. If nobody replies, you pay nothing.",
-    "balance": "{count, plural, =0 {You have no credits} one {You have # credit} other {You have # credits}}",
+    "subtitle": "Search for free and send as many messages as you like. You pay only when a candidate replies and you choose to open that reply. If nobody replies, you pay nothing.",
+    "balance": "{count, plural, =0 {You have no replies left} one {You have # reply available} other {You have # replies available}}",
     "freeLeft": "{count, plural, one {(+ # free reply this month)} other {(+ # free replies this month)}}",
     "packSize": "{count, plural, one {# reply} other {# replies}}",
     "perReply": "{price} lei per reply",
     "noExpiry": "Credits never expire.",
-    "buy": "Buy"
+    "buy": "Buy replies",
+    "sectionTitle": "Reply packs",
+    "subsTitle": "Or a subscription, if you hire constantly"
   },
   "backToSchool": {
     "eyebrow": "{count, plural, one {September · # day left} other {September · # days left}}",

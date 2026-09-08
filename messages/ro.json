@@ -677,12 +677,13 @@
     "unlock": {
       "title": "{count, plural, one {Ai primit # răspuns} few {Ai primit # răspunsuri} other {Ai primit # de răspunsuri}}",
       "freeLeft": "{count, plural, one {Deblocarea e gratuită — îți mai rămâne # răspuns gratuit luna asta.} few {Deblocarea e gratuită — îți mai rămân # răspunsuri gratuite luna asta.} other {Deblocarea e gratuită — îți mai rămân # de răspunsuri gratuite luna asta.}}",
-      "willUseCredit": "{count, plural, one {Se consumă 1 credit. Ai # credit disponibil.} few {Se consumă 1 credit. Ai # credite disponibile.} other {Se consumă 1 credit. Ai # de credite disponibile.}}",
-      "needCredits": "Nu mai ai credite. Cumpără un pachet ca să citești răspunsul.",
-      "cta": "Deblochează răspunsul",
-      "buyCta": "Cumpără credite",
-      "working": "Se deblochează…",
-      "noCredits": "Nu mai ai credite disponibile."
+      "willUseCredit": "{count, plural, one {Se folosește 1 răspuns. Mai ai # disponibil.} few {Se folosește 1 răspuns. Mai ai # disponibile.} other {Se folosește 1 răspuns. Mai ai # disponibile.}}",
+      "needCredits": "Nu mai ai răspunsuri disponibile. Ia un pachet ca să-l citești.",
+      "cta": "Deschide răspunsul",
+      "buyCta": "Cumpără răspunsuri",
+      "working": "Se deschide…",
+      "noCredits": "Nu mai ai răspunsuri disponibile.",
+      "hiddenMessage": "Răspuns blocat"
     }
   },
   "admin": {
@@ -1057,13 +1058,15 @@
   },
   "credite": {
     "title": "Plătești doar când primești un răspuns",
-    "subtitle": "Cauți gratis și trimiți câte mesaje vrei. Un credit se consumă abia când un candidat îți răspunde și tu alegi să deschizi răspunsul. Dacă nu-ți răspunde nimeni, nu plătești nimic.",
-    "balance": "{count, plural, =0 {Nu ai credite} one {Ai # credit} few {Ai # credite} other {Ai # de credite}}",
+    "subtitle": "Cauți gratis și trimiți câte mesaje vrei, gratis. Plătești abia când un candidat îți răspunde și tu alegi să-i deschizi răspunsul. Dacă nu-ți răspunde nimeni, nu plătești nimic.",
+    "balance": "{count, plural, =0 {Nu ai răspunsuri disponibile} one {Ai # răspuns disponibil} few {Ai # răspunsuri disponibile} other {Ai # de răspunsuri disponibile}}",
     "freeLeft": "{count, plural, one {(+ # răspuns gratuit luna asta)} few {(+ # răspunsuri gratuite luna asta)} other {(+ # de răspunsuri gratuite luna asta)}}",
     "packSize": "{count, plural, one {# răspuns} few {# răspunsuri} other {# de răspunsuri}}",
     "perReply": "{price} lei per răspuns",
     "noExpiry": "Creditele nu expiră.",
-    "buy": "Cumpără"
+    "buy": "Cumpără răspunsuri",
+    "sectionTitle": "Pachete de răspunsuri",
+    "subsTitle": "Sau abonament, dacă recrutezi tot timpul"
   },
   "backToSchool": {
     "eyebrow": "{count, plural, one {Septembrie · încă # zi} few {Septembrie · încă # zile} other {Septembrie · încă # de zile}}",

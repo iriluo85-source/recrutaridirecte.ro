@@ -152,6 +152,9 @@ export default async function AbonamentePage({
         </section>
       )}
 
+      {/* Firmelor le-a rămas un singur plan plătit, deci un comutator de perioadă
+          lipit sub pachetele de răspunsuri sugerează o reducere care nu există. */}
+      {rolAfisat !== "EMPLOYER" && (
       <div className="mx-auto mt-8 flex w-fit items-center gap-1 rounded-full border border-line bg-surface/60 p-1 backdrop-blur-md">
         {PERIOADE_ABONAMENT.map((p) => {
           const activ = p.id === perioada;
@@ -180,6 +183,7 @@ export default async function AbonamentePage({
           );
         })}
       </div>
+      )}
 
       {sp.activat && (
         <div className="mt-6 rounded-lg border border-accent/30 bg-accent-secondary px-4 py-3 text-center text-sm font-medium text-accent-secondary-foreground">

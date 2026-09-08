@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { esteDeblocata, esteScutitDeCredite } from "@/lib/credite";
 import { sendEmail, escapeHtml } from "@/lib/email";
 import { urlAplicatie } from "@/lib/tokens";
 import { createNotification } from "@/lib/notifications";
@@ -55,11 +56,20 @@ export async function notificaMesajNou(
       });
     } else {
       const link = `/angajator/mesaje/${conversationId}`;
+      // Dacă răspunsul nu e deblocat, notificarea și emailul NU au voie să conțină
+      // textul lui: altfel firma îl citește gratis din inbox și nu deschide niciodată
+      // conversația. Anunțăm doar CĂ a răspuns cineva.
+      const deschis =
+        (await esteDeblocata(conversationId)) ||
+        (await esteScutitDeCredite(conversation.employerId));
+      const fragmentAngajator = deschis
+        ? fragment
+        : "Un candidat ți-a răspuns. Intră în conversație ca să deschizi răspunsul.";
       await createNotification({
         userId: conversation.employer.user.id,
         tip: "MESAJ_NOU",
         titlu: `Mesaj nou de la ${conversation.candidate.numeComplet}`,
-        continut: fragment,
+        continut: fragmentAngajator,
         link,
         entityId: conversationId,
       });
@@ -67,7 +77,7 @@ export async function notificaMesajNou(
       await sendEmail({
         to: conversation.employer.user.email,
         subject: `Mesaj nou de la ${conversation.candidate.numeComplet}`,
-        html: `<p><strong>${escapeHtml(conversation.candidate.numeComplet)}</strong> ți-a trimis un mesaj:</p><p>${escapeHtml(fragment)}</p><p><a href="${urlAplicatie(link)}">Vezi conversația</a></p>`,
+        html: `<p><strong>${escapeHtml(conversation.candidate.numeComplet)}</strong> ți-a trimis un mesaj:</p><p>${escapeHtml(fragmentAngajator)}</p><p><a href="${urlAplicatie(link)}">Vezi conversația</a></p>`,
       });
     }
   } catch (error) {

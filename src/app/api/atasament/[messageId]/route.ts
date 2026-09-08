@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getConversationForUser } from "@/lib/chat";
-import { esteDeblocata } from "@/lib/credite";
+import { esteDeblocata, esteScutitDeCredite } from "@/lib/credite";
 
 export async function GET(
   _req: NextRequest,
@@ -28,10 +28,14 @@ export async function GET(
 
   // Atașamentele candidatului sunt parte din răspuns: fără deblocare, nu se descarcă.
   // Fără verificarea asta, linkul direct ar fi o portiță prin gating-ul din /api/mesaje.
+  // Abonatul Nelimitat și adminul nu consumă credite, deci nu au niciodată rând de
+  // deblocare — fără scutirea asta, tocmai clientul care plătește cel mai mult ar
+  // primi 402 la CV-ul candidatului.
   if (
     access.isEmployer &&
     message.trimisDe === "CANDIDATE" &&
-    !(await esteDeblocata(message.conversationId))
+    !(await esteDeblocata(message.conversationId)) &&
+    !(await esteScutitDeCredite(access.conversation.employerId))
   ) {
     return NextResponse.json({ error: "Răspuns neblocat" }, { status: 402 });
   }
