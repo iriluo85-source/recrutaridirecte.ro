@@ -37,8 +37,8 @@ export default async function BannerBackToSchool({
           </span>
 
           <h2 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Back to School
-            <span className="block text-emerald-300">and for Future Work</span>
+            Back to School,
+            <span className="block text-emerald-300">Forward to Work</span>
           </h2>
 
           <p className="mt-4 max-w-xl text-lg text-white/85">{t("subtitle")}</p>
