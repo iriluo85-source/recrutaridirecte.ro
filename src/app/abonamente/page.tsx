@@ -131,7 +131,14 @@ export default async function AbonamentePage({
                   <span className="text-base font-normal text-muted">lei</span>
                 </p>
                 <p className="mt-1 text-xs text-muted">{tCr("noExpiry")}</p>
-                {platiActive() && session?.user.role === "EMPLOYER" ? (
+                {session?.user.role === "EMPLOYER" && sold === null ? (
+                  <Link
+                    href="/angajator/profil/editeaza"
+                    className="btn-secondary mt-auto w-full text-center"
+                  >
+                    {tCr("needProfile")}
+                  </Link>
+                ) : platiActive() && session?.user.role === "EMPLOYER" ? (
                   <form action={initiazaPlataCrediteAction} className="mt-auto pt-4">
                     <input type="hidden" name="pachet" value={p.id} />
                     <button type="submit" className="btn-primary w-full">

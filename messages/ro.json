@@ -1066,7 +1066,8 @@
     "noExpiry": "Creditele nu expiră.",
     "buy": "Cumpără răspunsuri",
     "sectionTitle": "Pachete de răspunsuri",
-    "subsTitle": "Sau abonament, dacă recrutezi tot timpul"
+    "subsTitle": "Sau abonament, dacă recrutezi tot timpul",
+    "needProfile": "Completează profilul firmei"
   },
   "backToSchool": {
     "eyebrow": "{count, plural, one {Septembrie · încă # zi} few {Septembrie · încă # zile} other {Septembrie · încă # de zile}}",

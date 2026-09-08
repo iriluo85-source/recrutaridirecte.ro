@@ -1066,7 +1066,8 @@
     "noExpiry": "Credits never expire.",
     "buy": "Buy replies",
     "sectionTitle": "Reply packs",
-    "subsTitle": "Or a subscription, if you hire constantly"
+    "subsTitle": "Or a subscription, if you hire constantly",
+    "needProfile": "Complete your company profile"
   },
   "backToSchool": {
     "eyebrow": "{count, plural, one {September · # day left} other {September · # days left}}",

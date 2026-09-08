@@ -81,6 +81,11 @@ export async function initiazaPlataCrediteAction(formData: FormData) {
   });
   if (!user) redirect("/login");
 
+  // Creditele se atașează profilului de companie. Fără el, plata ar trece, factura
+  // ar pleca, iar creditele n-ar avea unde să se ducă — firma ar rămâne cu paguba.
+  // Oprim ÎNAINTE de plată, nu după.
+  if (!user.employerProfile) redirect("/angajator/profil/editeaza?nevoie=credite");
+
   await prisma.payment.create({
     data: {
       orderID: orderId,
