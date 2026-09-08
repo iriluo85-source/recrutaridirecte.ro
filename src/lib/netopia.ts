@@ -34,6 +34,11 @@ function cfg() {
 }
 
 // Plățile reale sunt active doar când avem ambele credențiale setate (verificat la runtime).
+/** Modul curent: sandbox (bani de test) sau live. Citit la runtime, nu la import. */
+export function esteSandbox(): boolean {
+  return cfg().sandbox;
+}
+
 export function platiActive(): boolean {
   return Boolean(process.env.NETOPIA_API_KEY && process.env.NETOPIA_POS_SIGNATURE);
 }
