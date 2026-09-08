@@ -71,6 +71,17 @@ export default async function AbonamentePage({
     }
   }
 
+  const esteAngajator = rolAfisat === "EMPLOYER";
+
+  // Pragul de la care abonamentul Nelimitat bate cel mai ieftin pachet. Calculat,
+  // nu scris de mână, ca să rămână adevărat dacă se schimbă prețurile.
+  const planNelimitat = planuriPentruRol("EMPLOYER").find((p) => p.tip === "UNLIMITED");
+  const celMaiIeftinPerRaspuns = Math.min(...PACHETE_CREDITE.map(pretPerRaspuns));
+  const pragAbonament =
+    planNelimitat && celMaiIeftinPerRaspuns > 0
+      ? Math.round(planNelimitat.pretLunar / celMaiIeftinPerRaspuns)
+      : 0;
+
   // Reducerea de student (campania Back to School). Se aplică ȘI la afișare, ȘI la
   // suma trimisă spre Netopia — sunt calculate din aceeași funcție ca să nu difere.
   const reducereStud = await reducereStudent(session?.user?.id);
@@ -85,10 +96,17 @@ export default async function AbonamentePage({
   return (
     <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-12">
       <div className="text-center">
-        <h1 className="text-3xl font-semibold">{t("title")}</h1>
-        <p className="mx-auto mt-2 max-w-xl text-muted">{t("subtitle")}</p>
+        <h1 className="text-3xl font-semibold">
+          {esteAngajator ? t("titleEmployer") : t("title")}
+        </h1>
+        <p className="mx-auto mt-2 max-w-xl text-muted">
+          {esteAngajator ? t("subtitleEmployer") : t("subtitle")}
+        </p>
         <div className="mx-auto mt-4 flex max-w-xl flex-wrap items-center justify-center gap-x-5 gap-y-1 text-sm text-muted">
-          {[t("reassure1"), t("reassure2"), t("reassure3")].map((r) => (
+          {(esteAngajator
+            ? [t("empReassure1"), t("empReassure2"), t("empReassure3")]
+            : [t("reassure1"), t("reassure2"), t("reassure3")]
+          ).map((r) => (
             <span key={r} className="inline-flex items-center gap-1.5">
               <span className="text-accent">✓</span>
               {r}
@@ -113,6 +131,8 @@ export default async function AbonamentePage({
               </p>
             )}
           </div>
+
+          <h3 className="mt-8 text-lg font-semibold">{tCr("sectionTitle")}</h3>
 
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {PACHETE_CREDITE.map((p) => (
@@ -156,6 +176,12 @@ export default async function AbonamentePage({
               </div>
             ))}
           </div>
+
+          {pragAbonament > 0 && (
+            <p className="mt-3 text-sm text-muted">{t("arbitraj", { prag: pragAbonament })}</p>
+          )}
+
+          <h3 className="mt-10 text-lg font-semibold">{tCr("subsTitle")}</h3>
         </section>
       )}
 
@@ -248,7 +274,11 @@ export default async function AbonamentePage({
         </div>
       )}
 
-      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div
+        className={`mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 ${
+          planuri.length <= 2 ? "mx-auto max-w-2xl" : "lg:grid-cols-4"
+        }`}
+      >
         {planuri.map((plan) => {
           const planCurent = tipCurent ?? "FREE";
           const estePlanulMeu = planCurent === plan.tip;
@@ -315,7 +345,10 @@ export default async function AbonamentePage({
                     {t("comingSoon")}
                   </span>
                 ) : esteVizitator ? (
-                  <Link href="/inregistrare" className="btn-secondary w-full justify-center">
+                  <Link
+                    href={esteAngajator ? "/inregistrare?rol=EMPLOYER" : "/inregistrare"}
+                    className="btn-secondary w-full justify-center"
+                  >
                     {t("needAccount")}
                   </Link>
                 ) : plan.tip === "FREE" ? (
@@ -345,10 +378,14 @@ export default async function AbonamentePage({
       <section className="mx-auto mt-12 max-w-2xl">
         <h2 className="text-center text-xl font-semibold">{t("faqTitle")}</h2>
         <div className="mt-4 flex flex-col gap-2">
-          {[1, 2, 3, 4].map((i) => (
+          {(esteAngajator ? [1, 2, 3, 4, 5] : [1, 2, 3, 4]).map((i) => (
             <details key={i} className="card">
-              <summary className="cursor-pointer font-medium">{t(`faqQ${i}`)}</summary>
-              <p className="mt-2 text-sm text-muted">{t(`faqA${i}`)}</p>
+              <summary className="cursor-pointer font-medium">
+                {esteAngajator ? t(`faqEmpQ${i}`) : t(`faqQ${i}`)}
+              </summary>
+              <p className="mt-2 text-sm text-muted">
+                {esteAngajator ? t(`faqEmpA${i}`, { prag: pragAbonament }) : t(`faqA${i}`)}
+              </p>
             </details>
           ))}
         </div>

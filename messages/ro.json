@@ -526,7 +526,23 @@
       "total": "Total lunar",
       "pay": "Plătește (simulare)",
       "secureNote": "La lansare, plata se procesează pe pagina securizată a procesatorului. Nu stocăm datele cardului."
-    }
+    },
+    "titleEmployer": "Cât costă să angajezi aici",
+    "subtitleEmployer": "Cauți gratis și scrii câte mesaje vrei. Plătești abia când un candidat îți răspunde.",
+    "empReassure1": "Nu plătești pentru tăcere",
+    "empReassure2": "Răspunsurile nu expiră",
+    "empReassure3": "Zero comision din salariu",
+    "faqEmpQ1": "Când plătesc, mai exact?",
+    "faqEmpA1": "Doar când un candidat îți răspunde și tu apeși „Deschide răspunsul\". Căutarea și mesajele trimise sunt gratuite, oricâte ai trimite.",
+    "faqEmpQ2": "Dacă nu-mi răspunde nimeni?",
+    "faqEmpA2": "Nu plătești nimic. Riscul că mesajele rămân fără răspuns e al nostru, nu al tău.",
+    "faqEmpQ3": "Expiră răspunsurile cumpărate?",
+    "faqEmpA3": "Nu. Rămân pe cont până le folosești, oricât ar dura. În plus, ai 2 răspunsuri gratuite în fiecare lună.",
+    "faqEmpQ4": "Luați comision din salariul angajatului?",
+    "faqEmpA4": "Nu, niciun leu. O agenție de recrutare percepe de obicei 1–3 salarii brute pentru o angajare. Aici plătești doar răspunsurile pe care le deschizi.",
+    "faqEmpQ5": "Când merită abonamentul în locul pachetelor?",
+    "faqEmpA5": "Peste circa {prag} de răspunsuri pe lună, abonamentul Nelimitat costă mai puțin decât orice pachet. Sub acest prag, pachetele sunt mai avantajoase.",
+    "arbitraj": "Peste circa {prag} de răspunsuri pe lună, abonamentul Nelimitat devine mai ieftin decât pachetele."
   },
   "cvPilot": {
     "subtitle": "Asistentul tău pentru un CV care atrage angajatorii.",

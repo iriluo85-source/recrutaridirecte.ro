@@ -526,7 +526,23 @@
       "total": "Monthly total",
       "pay": "Pay (simulation)",
       "secureNote": "At launch, payment is processed on the processor's secure page. We don't store card data."
-    }
+    },
+    "titleEmployer": "What hiring here costs",
+    "subtitleEmployer": "Search for free and send as many messages as you like. You pay only when a candidate replies.",
+    "empReassure1": "You never pay for silence",
+    "empReassure2": "Replies never expire",
+    "empReassure3": "No commission on salaries",
+    "faqEmpQ1": "When exactly do I pay?",
+    "faqEmpA1": "Only when a candidate replies and you click „Open the reply\". Searching and sending messages are free, however many you send.",
+    "faqEmpQ2": "What if nobody replies?",
+    "faqEmpA2": "You pay nothing. The risk that messages go unanswered is ours, not yours.",
+    "faqEmpQ3": "Do purchased replies expire?",
+    "faqEmpA3": "No. They stay on your account until you use them. You also get 2 free replies every month.",
+    "faqEmpQ4": "Do you take a commission from the salary?",
+    "faqEmpA4": "Not a leu. A recruitment agency typically charges 1–3 gross salaries per hire. Here you only pay for the replies you open.",
+    "faqEmpQ5": "When is the subscription better than the packs?",
+    "faqEmpA5": "Above roughly {prag} replies a month, the Unlimited plan costs less than any pack. Below that, the packs are better value.",
+    "arbitraj": "Above roughly {prag} replies a month, the Unlimited plan becomes cheaper than the packs."
   },
   "cvPilot": {
     "subtitle": "Your assistant for a CV that attracts employers.",
