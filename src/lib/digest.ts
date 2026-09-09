@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { sendEmail } from "@/lib/email";
+import { sendEmail, escapeHtml } from "@/lib/email";
 import { urlAplicatie } from "@/lib/tokens";
-import { calculeazaScorPotrivire } from "@/lib/matching";
+import { calculeazaScorPotrivire, locatiePotriveste } from "@/lib/matching";
 import { domeniuDupaSlug, DOMENII } from "@/lib/domenii";
+import { linkDezabonare } from "@/lib/newsletter";
 
 const ZILE_NOI = 7; // fereastra pentru "CV-uri noi"
 const SCOR_MINIM = 40; // prag de potrivire ca un candidat să intre în digest
@@ -20,7 +21,7 @@ export async function trimiteDigestAngajatori(): Promise<DigestRezultat> {
   const deLa = new Date(acum - ZILE_NOI * 24 * 60 * 60 * 1000);
 
   const angajatori = await prisma.user.findMany({
-    where: { role: "EMPLOYER", emailuriDigest: true },
+    where: { role: "EMPLOYER", emailuriDigest: true, emailVerificat: true },
     include: { employerProfile: true },
   });
 
@@ -88,4 +89,146 @@ export async function trimiteDigestAngajatori(): Promise<DigestRezultat> {
   }
 
   return { trimise, totalOptIn: angajatori.length };
+}
+
+// ---------------------------------------------------------------------------
+// Digestul candidaților: posturi noi potrivite cu orașul lor + companii noi.
+//
+// Regula care ține sistemul sănătos: dacă nu e nimic nou pentru cineva, NU
+// primește email. Un „n-avem nimic pentru tine" la fiecare două zile produce
+// dezabonări și arde reputația domeniului la Resend — adică ajung în spam exact
+// emailurile care contează: confirmări, mesaje, oferte.
+
+/** Fereastra pentru cineva care n-a mai primit niciun digest. */
+const FEREASTRA_INITIALA_ZILE = 7;
+
+export type DigestCandidatiRezultat = {
+  optIn: number;
+  trimise: number;
+  sarite: number;
+  esuate: number;
+};
+
+export async function trimiteDigestCandidati(
+  doarTest = false
+): Promise<DigestCandidatiRezultat> {
+  const acum = new Date();
+
+  const useri = await prisma.user.findMany({
+    where: {
+      role: "CANDIDATE",
+      emailuriDigest: true,
+      emailVerificat: true,
+      candidateProfile: { isNot: null },
+    },
+    select: {
+      id: true,
+      email: true,
+      ultimulDigestLa: true,
+      candidateProfile: { select: { locatie: true } },
+    },
+  });
+
+  const r: DigestCandidatiRezultat = {
+    optIn: useri.length,
+    trimise: 0,
+    sarite: 0,
+    esuate: 0,
+  };
+
+  for (const u of useri) {
+    const de =
+      u.ultimulDigestLa ??
+      new Date(acum.getTime() - FEREASTRA_INITIALA_ZILE * 24 * 60 * 60 * 1000);
+
+    const [posturi, firmeNoi] = await Promise.all([
+      prisma.post.findMany({
+        where: { activ: true, createdAt: { gte: de } },
+        select: {
+          titlu: true,
+          locatie: true,
+          remote: true,
+          salariuMin: true,
+          salariuMax: true,
+          employer: { select: { numeCompanie: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 20,
+      }),
+      prisma.employerProfile.count({ where: { createdAt: { gte: de } } }),
+    ]);
+
+    // Doar posturile din orașul candidatului (sau remote) — aceeași regulă ca în căutare.
+    const alelui = posturi.filter((p) =>
+      locatiePotriveste(p.locatie ?? "", p.remote, u.candidateProfile?.locatie || undefined)
+    );
+
+    if (alelui.length === 0 && firmeNoi === 0) {
+      r.sarite++;
+      continue;
+    }
+
+    if (doarTest) {
+      r.trimise++;
+      continue;
+    }
+
+    const listaPosturi = alelui
+      .map((p) => {
+        const parti: string[] = [];
+        if (p.salariuMin != null || p.salariuMax != null) {
+          const s =
+            p.salariuMin != null && p.salariuMax != null
+              ? `${p.salariuMin}–${p.salariuMax}`
+              : `${p.salariuMin ?? p.salariuMax}`;
+          parti.push(`${s} lei`);
+        }
+        const loc = [p.locatie, p.remote ? "remote" : null].filter(Boolean).join(" · ");
+        if (loc) parti.push(loc);
+        return (
+          `<li style="margin-bottom:10px"><strong>${escapeHtml(p.titlu)}</strong><br/>` +
+          `<span style="color:#555">${escapeHtml(p.employer.numeCompanie)}` +
+          (parti.length ? ` — ${escapeHtml(parti.join(" · "))}` : "") +
+          `</span></li>`
+        );
+      })
+      .join("");
+
+    const corp =
+      (alelui.length > 0
+        ? `<p><strong>${alelui.length === 1 ? "Un post nou" : alelui.length + " posturi noi"} pentru tine:</strong></p><ul style="padding-left:18px">${listaPosturi}</ul>`
+        : "") +
+      (firmeNoi > 0
+        ? `<p>${firmeNoi === 1 ? "O companie nouă s-a alăturat" : firmeNoi + " companii noi s-au alăturat"} platformei.</p>`
+        : "");
+
+    const titlu =
+      alelui.length > 0
+        ? alelui.length === 1
+          ? "Un post nou pentru tine"
+          : `${alelui.length} posturi noi pentru tine`
+        : "Companii noi pe platformă";
+
+    const ok = await sendEmail({
+      to: u.email,
+      subject: `${titlu} — Recrutare Directă`,
+      html:
+        `<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#111">` +
+        corp +
+        `<p style="margin:20px 0"><a href="${urlAplicatie("/companii")}" style="background:#16a34a;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;display:inline-block">Vezi pe platformă</a></p>` +
+        `<hr style="border:none;border-top:1px solid #eee;margin:16px 0"/>` +
+        `<p style="color:#888;font-size:12px">Primești acest email pentru că ai activate alertele pe Recrutare Directă. ` +
+        `<a href="${linkDezabonare(u.id)}">Dezabonează-te</a> sau schimbă preferințele din Setări.</p>` +
+        `</div>`,
+    });
+
+    if (ok) {
+      r.trimise++;
+      await prisma.user.updateMany({ where: { id: u.id }, data: { ultimulDigestLa: acum } });
+    } else {
+      r.esuate++;
+    }
+  }
+
+  return r;
 }

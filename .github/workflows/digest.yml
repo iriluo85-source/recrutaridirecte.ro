@@ -1,0 +1,30 @@
+name: Digest la 2 zile
+
+# Rulează din 2 în 2 zile, la 07:30 UTC (≈ 10:30 în România, vara).
+# GitHub cron nu are „la fiecare 2 zile" nativ, dar `*/2` pe zi din lună face exact asta
+# (excepție: trecerea de la 31 la 1, când sar 1 zi în plus — acceptabil pentru un digest).
+on:
+  schedule:
+    - cron: "30 7 */2 * *"
+  workflow_dispatch:
+    inputs:
+      trimite:
+        description: "Trimite efectiv (altfel doar arată câți ar primi)"
+        type: boolean
+        default: true
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trimite digestul
+        run: |
+          TRIMITE="1"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.trimite }}" != "true" ]; then
+            TRIMITE="0"
+          fi
+          echo "Rulez digestul (trimite=$TRIMITE)"
+          curl -fsS --max-time 120 -X GET \
+            "https://www.recrutaridirecte.ro/api/cron/digest?trimite=$TRIMITE" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
+          echo ""
