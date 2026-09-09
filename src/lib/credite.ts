@@ -22,9 +22,9 @@ export type PachetCredite = {
 };
 
 export const PACHETE_CREDITE: PachetCredite[] = [
-  { id: "CREDITE_5", credite: 5, pret: 249 },
-  { id: "CREDITE_15", credite: 15, pret: 599, evidentiat: true },
-  { id: "CREDITE_40", credite: 40, pret: 1196 },
+  { id: "CREDITE_5", credite: 5, pret: 149 },
+  { id: "CREDITE_15", credite: 15, pret: 349, evidentiat: true },
+  { id: "CREDITE_40", credite: 40, pret: 796 },
 ];
 
 export function gasestePachet(id: string): PachetCredite | undefined {
