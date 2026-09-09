@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
+import { activeazaDigestExistentiAction } from "./actions";
 import DigestButton from "./DigestButton";
 import NewsletterButton from "./NewsletterButton";
 
 export default async function AdminDashboardPage() {
   const t = await getTranslations("admin");
-  const [candidati, angajatori, conversatii, mesaje, rapoarteNerezolvate, testimonialeInAsteptare] =
+  const [candidati, angajatori, conversatii, mesaje, rapoarteNerezolvate, testimonialeInAsteptare, digestOprit] =
     await Promise.all([
       prisma.candidateProfile.count(),
       prisma.employerProfile.count(),
@@ -14,6 +15,8 @@ export default async function AdminDashboardPage() {
       prisma.message.count(),
       prisma.report.count({ where: { rezolvat: false } }),
       prisma.testimonial.count({ where: { aprobat: false } }),
+      // conturi vechi care nu primesc alertele fiindcă setarea nu exista la înregistrare
+      prisma.user.count({ where: { emailuriDigest: false, ultimulDigestLa: null } }),
     ]);
 
   const carduri = [
@@ -36,6 +39,22 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
+
+      {digestOprit > 0 && (
+        <div className="card mt-6 border-accent/40 bg-accent/5">
+          <p className="font-medium">Alerte oprite pe conturi vechi</p>
+          <p className="mt-1 text-sm text-muted">
+            {digestOprit} conturi create înainte ca alertele să pornească din oficiu nu primesc
+            digestul. Caseta nu exista la înregistrare, deci nimeni nu a refuzat-o.
+            Newsletterul nu se atinge.
+          </p>
+          <form action={activeazaDigestExistentiAction} className="mt-3">
+            <button type="submit" className="btn-primary">
+              Pornește alertele pentru cele {digestOprit} conturi
+            </button>
+          </form>
+        </div>
+      )}
       <div className="mt-8 flex flex-wrap gap-3">
         <Link href="/admin/statistici" className="btn-primary">
           {t("stats.button")}

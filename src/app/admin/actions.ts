@@ -208,3 +208,20 @@ export async function seteazaAbonamentAction(formData: FormData) {
 
   revalidatePath("/admin/utilizatori");
 }
+
+// Pornește alertele (emailuriDigest) pentru conturile create ÎNAINTE ca setarea să
+// fie activă din oficiu. Caseta nu a existat niciodată la înregistrare, deci nimeni
+// nu a refuzat-o conștient — spre deosebire de newsletter, unde o debifare putea fi
+// o alegere reală, motiv pentru care acela NU se atinge aici.
+// Ocolește doar conturile care au primit deja un digest (își păstrează starea).
+export async function activeazaDigestExistentiAction() {
+  const session = await auth();
+  if (!session?.user?.isAdmin) return;
+
+  await prisma.user.updateMany({
+    where: { emailuriDigest: false, ultimulDigestLa: null },
+    data: { emailuriDigest: true },
+  });
+
+  revalidatePath("/admin");
+}
