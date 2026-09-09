@@ -59,7 +59,12 @@
     "statsCandidates": "Peste {count, number} {de}candidați folosesc platforma",
     "statsCompanies": "Peste {count, number} {de}companii recrutează pe platformă",
     "companiesCta": "Vezi companii",
-    "companiesMore": "{count, plural, one {și încă # companie} few {și încă # companii} other {și încă # de companii}}"
+    "companiesMore": "{count, plural, one {și încă # companie} few {și încă # companii} other {și încă # de companii}}",
+    "employerBandKicker": "Pentru angajatori",
+    "employerBandTitle": "Vezi cine caută de lucru, înainte să-ți faci cont",
+    "employerBandDesc": "Cauți gratis și scrii câte mesaje vrei, gratis. Plătești abia când un candidat îți răspunde și tu vrei să-i deschizi răspunsul. Fără comision din salariu.",
+    "employerBandCta": "Vezi candidații disponibili",
+    "employerBandNote": "Pagini publice, fără cont."
   },
   "auth": {
     "login": {

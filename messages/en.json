@@ -59,7 +59,12 @@
     "statsCandidates": "Over {count, number} candidates use the platform",
     "statsCompanies": "Over {count, number} companies recruit on the platform",
     "companiesCta": "View companies",
-    "companiesMore": "{count, plural, one {and # more company} other {and # more companies}}"
+    "companiesMore": "{count, plural, one {and # more company} other {and # more companies}}",
+    "employerBandKicker": "For employers",
+    "employerBandTitle": "See who is looking for work, before you sign up",
+    "employerBandDesc": "Search for free and send as many messages as you like. You pay only when a candidate replies and you choose to open that reply. No commission on salaries.",
+    "employerBandCta": "See available candidates",
+    "employerBandNote": "Public pages, no account needed."
   },
   "auth": {
     "login": {
