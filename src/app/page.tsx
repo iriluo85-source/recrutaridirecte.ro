@@ -9,23 +9,6 @@ import Avatar from "@/components/Avatar";
 import BannerBackToSchool from "@/components/BannerBackToSchool";
 import { oraseCuCandidati, slugOras } from "@/lib/disponibili";
 
-// Deocamdată afișăm numărul EXACT: la câteva sute de oameni, cifra reală e mai
-// credibilă decât una rotundă, și se schimbă zilnic — ceea ce se vede.
-// Când baza va fi mare, se poate reveni la rotunjire în jos pe trepte de 10 sau 100.
-function pestePrag(n: number): number {
-  return n;
-}
-
-// regula românească: „de" se folosește la numere ale căror ultime două cifre sunt 00 sau ≥ 20
-/** Sub pragul ăsta nu afișăm numărul de companii — ar spune „nu e nimeni aici". */
-const PRAG_AFISARE_COMPANII = 10;
-
-function prefixDe(n: number): string {
-  const ultimele = n % 100;
-  const useDe = ultimele === 0 ? n !== 0 : ultimele >= 20;
-  return useDe ? "de " : "";
-}
-
 export default async function Home({
   searchParams,
 }: {
@@ -41,16 +24,7 @@ export default async function Home({
   const contSters = (await searchParams)["cont-sters"] === "1";
   const slide = alegeSlideAleator();
 
-  // numărători live pentru banda de social proof (se actualizează singure).
-  // Numărăm toate conturile înregistrate pe rol (nu doar cele cu profil completat).
-  const [candidatiCount, companiiCount] = await Promise.all([
-    prisma.user.count({ where: { role: "CANDIDATE" } }),
-    prisma.user.count({ where: { role: "EMPLOYER" } }),
-  ]);
-  const candidatiAfisat = pestePrag(candidatiCount);
-  const companiiAfisat = pestePrag(companiiCount);
-
-  // Firmele active din director, pentru banda „vezi companii" de deasupra numerelor.
+  // Firmele active din director, pentru banda „vezi companii".
   // Aceleași reguli ca /companii (src/lib/companii.ts), ordonate la fel: cine
   // angajează primul, apoi firmele abonate.
   const companiiDirector = filtreazaCompanii(
@@ -311,27 +285,6 @@ export default async function Home({
           </div>
         </section>
       )}
-
-      {/* Bandă social proof — numere live */}
-      <section className="border-b border-line bg-surface/60">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-x-8 gap-y-1 px-6 py-5 text-center sm:flex-row">
-          <p className="text-sm font-medium">
-            <span className="mr-1.5 text-accent">👥</span>
-            {t("statsCandidates", { count: candidatiAfisat, de: prefixDe(candidatiAfisat) })}
-          </p>
-          {/* Un număr mic de companii nu e social proof, e avertisment. Îl arătăm
-              abia când chiar susține afirmația. */}
-          {companiiAfisat >= PRAG_AFISARE_COMPANII && (
-            <>
-              <span className="hidden text-line sm:inline">·</span>
-              <p className="text-sm font-medium">
-                <span className="mr-1.5 text-accent">🏢</span>
-                {t("statsCompanies", { count: companiiAfisat, de: prefixDe(companiiAfisat) })}
-              </p>
-            </>
-          )}
-        </div>
-      </section>
 
       {/* Dashboard candidat */}
       {candDash && (
