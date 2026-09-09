@@ -13,6 +13,8 @@ export type MatchCriteria = {
   experientaMax?: number;
   bugetMin?: number;
   bugetMax?: number;
+  /** Include și candidații disponibili remote, indiferent de orașul căutat. */
+  includeRemote?: boolean;
 };
 
 export type CandidateForMatching = {
@@ -55,9 +57,18 @@ export function normalizeazaText(s: string): string {
 
 // Locația candidatului se potrivește cu cea căutată dacă e remote sau orașul coincide
 // (insensibil la diacritice). Folosit atât la scor, cât și la filtrarea din căutare.
-export function locatiePotriveste(candidatLocatie: string, remote: boolean, cautat?: string): boolean {
+export function locatiePotriveste(
+  candidatLocatie: string,
+  remote: boolean,
+  cautat?: string,
+  includeRemote = false
+): boolean {
   if (!cautat || !cautat.trim()) return true;
-  return remote || normalizeazaText(candidatLocatie).includes(normalizeazaText(cautat));
+  // Înainte, orice candidat marcat remote trecea prin ORICE căutare de oraș — de-aia
+  // apăreau bucureșteni la o căutare de Timișoara. Acum orașul chiar filtrează, iar
+  // remote-ul se cere explicit.
+  if (includeRemote && remote) return true;
+  return normalizeazaText(candidatLocatie).includes(normalizeazaText(cautat));
 }
 
 // Filtre „dure": candidatul e EXCLUS din rezultate dacă nu respectă criteriile explicite
@@ -65,10 +76,27 @@ export function locatiePotriveste(candidatLocatie: string, remote: boolean, caut
 // (numele sunt fuzzy), ele contează doar la scor. Folosit în căutarea angajatorului.
 export function treceFiltrele(
   criterii: MatchCriteria,
-  candidat: Pick<CandidateForMatching, "locatie" | "remote" | "aniExperienta" | "salariuMinim" | "salariuMaxim">
+  candidat: Pick<
+    CandidateForMatching,
+    "locatie" | "remote" | "aniExperienta" | "salariuMinim" | "salariuMaxim"
+  > & { skills?: string[] }
 ): boolean {
-  // Locație: doar orașul căutat sau candidați remote.
-  if (!locatiePotriveste(candidat.locatie, candidat.remote, criterii.locatie)) return false;
+  // Locație: strict orașul căutat. Remote intră doar dacă angajatorul a bifat.
+  if (
+    !locatiePotriveste(candidat.locatie, candidat.remote, criterii.locatie, criterii.includeRemote)
+  ) {
+    return false;
+  }
+  // Skill-uri: dacă angajatorul a cerut ceva anume, candidatul trebuie să aibă măcar
+  // unul dintre ele. Înainte skill-urile influențau doar scorul, deci o căutare de
+  // „React" întorcea și contabili, mai jos în listă.
+  if (criterii.skills.length > 0) {
+    const cerute = criterii.skills.map(normalizeazaText).filter(Boolean);
+    const ale = (candidat.skills ?? []).map(normalizeazaText).filter(Boolean);
+    if (cerute.length > 0 && !cerute.some((c) => ale.some((a) => skillSePotriveste(c, a)))) {
+      return false;
+    }
+  }
   // Experiență: strict în intervalul cerut (dacă e setat).
   if (criterii.experientaMin !== undefined && candidat.aniExperienta < criterii.experientaMin) return false;
   if (criterii.experientaMax !== undefined && candidat.aniExperienta > criterii.experientaMax) return false;

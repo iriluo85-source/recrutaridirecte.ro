@@ -357,7 +357,8 @@
       "next": "Next",
       "pageOf": "Page {current} of {total}",
       "domainActive": "Candidates for {domeniu}",
-      "searchFreely": "Search all fields"
+      "searchFreely": "Search all fields",
+      "includeRemote": "Include remote candidates"
     },
     "candidate": {
       "location": "Location",

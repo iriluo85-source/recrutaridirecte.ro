@@ -357,7 +357,8 @@
       "next": "Următor",
       "pageOf": "Pagina {current} din {total}",
       "domainActive": "Candidați pentru {domeniu}",
-      "searchFreely": "Caută în toate domeniile"
+      "searchFreely": "Caută în toate domeniile",
+      "includeRemote": "Include și candidați remote"
     },
     "candidate": {
       "location": "Locație",

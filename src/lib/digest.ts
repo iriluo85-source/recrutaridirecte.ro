@@ -169,7 +169,8 @@ export async function trimiteDigestCandidati(
 
     // Doar posturile din orașul candidatului (sau remote) — aceeași regulă ca în căutare.
     const alelui = posturi.filter((p) =>
-      locatiePotriveste(p.locatie ?? "", p.remote, u.candidateProfile?.locatie || undefined)
+      // Aici remote-ul chiar contează: un post remote e relevant pentru orice candidat.
+      locatiePotriveste(p.locatie ?? "", p.remote, u.candidateProfile?.locatie || undefined, true)
     );
 
     if (alelui.length === 0 && firmeNoi < PRAG_FIRME_SINGURE) {

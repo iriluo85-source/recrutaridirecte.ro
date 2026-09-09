@@ -40,6 +40,7 @@ export default async function CautarePage({
   const bugetMax = parseIntParam(typeof params.bugetMax === "string" ? params.bugetMax : undefined);
   const filtruPermis = params.permis === "on";
   const filtruDeplasari = params.deplasari === "on";
+  const includeRemote = params.remote === "on";
 
   const domeniu = domeniuDupaSlug(typeof params.domeniu === "string" ? params.domeniu : undefined);
 
@@ -92,6 +93,7 @@ export default async function CautarePage({
     experientaMax,
     bugetMin,
     bugetMax,
+    includeRemote,
   };
 
   const rezultate = candidati
@@ -120,7 +122,14 @@ export default async function CautarePage({
     .sort((a, b) => b.scorSortare - a.scorSortare)
     .filter((r) => {
       // Filtre dure: locație (oraș sau remote), interval de experiență, buget.
-      if (!treceFiltrele(criterii, r.candidat)) return false;
+      if (
+        !treceFiltrele(criterii, {
+          ...r.candidat,
+          skills: r.candidat.skills.map((s) => s.skill.nume),
+        })
+      ) {
+        return false;
+      }
       if (filtruPermis && !r.candidat.permisConducere) return false;
       if (filtruDeplasari && !r.candidat.dispusDeplasari) return false;
       return true;
@@ -137,6 +146,7 @@ export default async function CautarePage({
         aniExperienta: c.aniExperienta,
         salariuMinim: c.salariuMinim,
         salariuMaxim: c.salariuMaxim,
+        skills: c.skills.map((s) => s.skill.nume),
       })
     ) {
       return false;
@@ -167,6 +177,7 @@ export default async function CautarePage({
     qs.set("bugetMax", String(salariu));
     if (filtruPermis) qs.set("permis", "on");
     if (filtruDeplasari) qs.set("deplasari", "on");
+    if (includeRemote) qs.set("remote", "on");
     return `/angajator/cautare?${qs.toString()}`;
   }
 
@@ -181,6 +192,7 @@ export default async function CautarePage({
     if (bugetMax !== undefined) qs.set("bugetMax", String(bugetMax));
     if (filtruPermis) qs.set("permis", "on");
     if (filtruDeplasari) qs.set("deplasari", "on");
+    if (includeRemote) qs.set("remote", "on");
     qs.set("page", String(page));
     return `/angajator/cautare?${qs.toString()}`;
   }
@@ -296,6 +308,10 @@ export default async function CautarePage({
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" name="deplasari" value="on" defaultChecked={filtruDeplasari} className="accent-accent" />
             🧳 {tc("atribute.deplasari")}
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="remote" value="on" defaultChecked={includeRemote} className="accent-accent" />
+            🌍 {t("search.includeRemote")}
           </label>
         </div>
         <button type="submit" className="btn-primary col-span-1 sm:col-span-2">
