@@ -9,12 +9,11 @@ import Avatar from "@/components/Avatar";
 import BannerBackToSchool from "@/components/BannerBackToSchool";
 import { oraseCuCandidati, slugOras } from "@/lib/disponibili";
 
-// rotunjim în jos la un prag „frumos" ca „Peste N" să rămână mereu adevărat
+// Deocamdată afișăm numărul EXACT: la câteva sute de oameni, cifra reală e mai
+// credibilă decât una rotundă, și se schimbă zilnic — ceea ce se vede.
+// Când baza va fi mare, se poate reveni la rotunjire în jos pe trepte de 10 sau 100.
 function pestePrag(n: number): number {
-  if (n < 10) return n;
-  if (n < 100) return Math.floor(n / 10) * 10;
-  if (n < 1000) return Math.floor(n / 50) * 50;
-  return Math.floor(n / 100) * 100;
+  return n;
 }
 
 // regula românească: „de" se folosește la numere ale căror ultime două cifre sunt 00 sau ≥ 20
