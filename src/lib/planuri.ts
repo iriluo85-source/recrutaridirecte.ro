@@ -42,7 +42,7 @@ export const PLANURI_CANDIDAT: Plan[] = [
     tip: "GOLD",
     nume: "Avânt",
     numeEn: "Boost",
-    pretLunar: 19.99,
+    pretLunar: 29.99,
     clasaAccent: ACCENT.GOLD,
     beneficii: [
       "Tot din Start",
@@ -55,7 +55,7 @@ export const PLANURI_CANDIDAT: Plan[] = [
     tip: "PLATINUM",
     nume: "Prestige",
     numeEn: "Prestige",
-    pretLunar: 29.99,
+    pretLunar: 39.99,
     evidentiat: true,
     clasaAccent: ACCENT.PLATINUM,
     beneficii: [
@@ -70,7 +70,7 @@ export const PLANURI_CANDIDAT: Plan[] = [
     tip: "UNLIMITED",
     nume: "Nelimitat",
     numeEn: "Unlimited",
-    pretLunar: 39.99,
+    pretLunar: 59.99,
     clasaAccent: ACCENT.UNLIMITED,
     beneficii: [
       "Tot din Prestige",
