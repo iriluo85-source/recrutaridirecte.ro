@@ -102,6 +102,15 @@ export async function trimiteDigestAngajatori(): Promise<DigestRezultat> {
 /** Fereastra pentru cineva care n-a mai primit niciun digest. */
 const FEREASTRA_INITIALA_ZILE = 7;
 
+/**
+ * O singură companie nouă NU e o știre. Un email care spune doar „o companie s-a
+ * alăturat" e conținut gol: îi învață pe oameni să ne ignore și strică rata de
+ * deschidere pentru emailurile care chiar contează. Companiile noi merită un email
+ * pe cont propriu abia de la acest prag în sus; altfel sunt doar un rând în plus
+ * lângă posturi.
+ */
+const PRAG_FIRME_SINGURE = 3;
+
 export type DigestCandidatiRezultat = {
   optIn: number;
   trimise: number;
@@ -163,7 +172,7 @@ export async function trimiteDigestCandidati(
       locatiePotriveste(p.locatie ?? "", p.remote, u.candidateProfile?.locatie || undefined)
     );
 
-    if (alelui.length === 0 && firmeNoi === 0) {
+    if (alelui.length === 0 && firmeNoi < PRAG_FIRME_SINGURE) {
       r.sarite++;
       continue;
     }

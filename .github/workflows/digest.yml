@@ -4,8 +4,10 @@ name: Digest la 2 zile
 # GitHub cron nu are „la fiecare 2 zile" nativ, dar `*/2` pe zi din lună face exact asta
 # (excepție: trecerea de la 31 la 1, când sar 1 zi în plus — acceptabil pentru un digest).
 on:
-  schedule:
-    - cron: "30 7 */2 * *"
+  # Programarea automată e OPRITĂ până când există destule posturi ca digestul să
+  # aibă ce spune. Se repornește ștergând comentariul de mai jos.
+  # schedule:
+  #   - cron: "30 7 */2 * *"
   workflow_dispatch:
     inputs:
       trimite:
