@@ -124,7 +124,8 @@ export async function loginAction(
     throw error;
   }
 
-  redirect(user?.role === "EMPLOYER" ? "/angajator/profil" : "/candidat/profil");
+  // Angajatorul care revine vine să se uite la oameni, nu la propriul profil.
+  redirect(user?.role === "EMPLOYER" ? "/angajator/cautare" : "/candidat/profil");
 }
 
 export async function logoutAction() {
