@@ -57,10 +57,10 @@ model User {
   isAdmin        Boolean  @default(false)
   telefon        String?  @unique
   notificariEmail Boolean @default(true)
-  notificariPush  Boolean @default(false)
+  notificariPush  Boolean @default(true)
   pushToken       String?  // token Expo pentru notificări push pe telefon
-  emailuriDigest  Boolean @default(false)
-  newsletterEmail Boolean @default(false)
+  emailuriDigest  Boolean @default(true)
+  newsletterEmail Boolean @default(true)
   termeniAcceptatiLa DateTime?
   relansareProfilLa DateTime? // când i-am trimis emailul „completează-ți profilul" (ca să nu-l retrimitem)
   abonamentTip    String?   // GOLD | PLATINUM | UNLIMITED (null = fără abonament / gratuit)

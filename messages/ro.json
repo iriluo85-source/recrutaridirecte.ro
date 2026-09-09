@@ -92,7 +92,8 @@
       "haveAccount": "Ai deja cont?",
       "signIn": "Autentifică-te",
       "student": "Sunt elev sau student",
-      "studentHint": "Îți verificăm legitimația și primești 50% reducere la orice abonament, în septembrie."
+      "studentHint": "Îți verificăm legitimația și primești 50% reducere la orice abonament, în septembrie.",
+      "newsletterNote": "Îți trimitem alerte când apar joburi potrivite pentru tine, plus noutăți despre platformă. Te poți dezabona oricând, din Setări sau din linkul aflat la finalul fiecărui email."
     },
     "forgotPassword": {
       "title": "Ai uitat parola?",

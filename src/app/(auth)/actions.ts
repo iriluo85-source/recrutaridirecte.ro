@@ -53,7 +53,8 @@ export async function registerAction(
       passwordHash,
       role,
       termeniAcceptatiLa: new Date(),
-      newsletterEmail: formData.get("newsletter") === "on",
+      // Notificările și alertele rămân pe implicitul din schemă (pornite).
+      // Dezabonarea se face din Setări sau din linkul din fiecare email.
     },
   });
 

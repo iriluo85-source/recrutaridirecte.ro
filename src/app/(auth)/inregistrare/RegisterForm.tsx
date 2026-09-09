@@ -107,10 +107,7 @@ export default function RegisterForm({
           </label>
         )}
 
-        <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" name="newsletter" className="mt-0.5 accent-accent" />
-          <span>{t("register.newsletter")}</span>
-        </label>
+        <p className="text-xs text-muted">{t("register.newsletterNote")}</p>
 
         {state?.error && <p className="text-sm text-red-500">{state.error}</p>}
 

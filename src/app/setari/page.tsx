@@ -54,9 +54,9 @@ export default async function SetariPage() {
         <h2 className="field-label">{t("notifications.heading")}</h2>
         <NotificationsForm
           notificariEmail={user?.notificariEmail ?? true}
-          notificariPush={user?.notificariPush ?? false}
-          emailuriDigest={user?.emailuriDigest ?? false}
-          newsletterEmail={user?.newsletterEmail ?? false}
+          notificariPush={user?.notificariPush ?? true}
+          emailuriDigest={user?.emailuriDigest ?? true}
+          newsletterEmail={user?.newsletterEmail ?? true}
         />
       </div>
 

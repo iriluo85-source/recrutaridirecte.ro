@@ -92,7 +92,8 @@
       "haveAccount": "Already have an account?",
       "signIn": "Sign in",
       "student": "I am a student or pupil",
-      "studentHint": "We verify your student ID and you get 50% off any plan, throughout September."
+      "studentHint": "We verify your student ID and you get 50% off any plan, throughout September.",
+      "newsletterNote": "We will email you when jobs matching your profile appear, plus platform news. You can unsubscribe any time, from Settings or the link at the bottom of every email."
     },
     "forgotPassword": {
       "title": "Forgot your password?",
