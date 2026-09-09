@@ -839,7 +839,8 @@
       "pendingTestimonials": "Pending testimonials",
       "profileViews": "Profile views",
       "cvDownloads": "CV downloads",
-      "fEmailConfirmed": "Email confirmed"
+      "fEmailConfirmed": "Email confirmed",
+      "topTitles": "Candidate job titles"
     }
   },
   "footer": {

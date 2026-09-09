@@ -182,7 +182,7 @@ export default async function AdminStatisticiPage() {
     prisma.user.count(),
 
     prisma.skill.findMany({ select: { nume: true, _count: { select: { candidates: true } } } }),
-    prisma.candidateProfile.findMany({ select: { locatie: true } }),
+    prisma.candidateProfile.findMany({ select: { locatie: true, titluCurent: true } }),
     prisma.post.count({ where: { activ: true } }),
     prisma.post.findMany({ where: { activ: true }, select: { locatie: true } }),
 
@@ -373,6 +373,13 @@ export default async function AdminStatisticiPage() {
             randuri={grupeaza(locatiiPost.map((p) => p.locatie))}
           />
           <Lista titlu={t("stats.topSkills")} randuri={topSkills} />
+        </div>
+        {/* Ce meserii au oamenii — cel mai direct indiciu pe cine merită sunat. */}
+        <div className="mt-4">
+          <Lista
+            titlu={t("stats.topTitles")}
+            randuri={grupeaza(locatiiCand.map((c) => c.titluCurent), 12)}
+          />
         </div>
       </section>
 
