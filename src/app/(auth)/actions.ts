@@ -83,7 +83,11 @@ export async function registerAction(
   if (role === "CANDIDATE" && formData.get("student") === "on" && campanieActiva()) {
     redirect("/candidat/student");
   }
-  redirect(role === "EMPLOYER" ? "/angajator/profil/editeaza" : "/candidat/profil/editeaza");
+  // Angajatorul ajunge direct la candidați, nu la un formular. A venit fiindcă i s-au
+  // promis oameni; dacă primul ecran cere CUI, pleacă înainte să vadă vreunul.
+  // Profilul i se cere oricum la primul contact (startConversationAction), adică exact
+  // atunci când are un motiv să-l completeze.
+  redirect(role === "EMPLOYER" ? "/angajator/cautare" : "/candidat/profil/editeaza");
 }
 
 export async function loginAction(
