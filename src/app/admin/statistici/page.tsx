@@ -100,12 +100,14 @@ export default async function AdminStatisticiPage() {
     useriNoi,
     activi7,
     contCand,
+    emailCand,
     profCand,
     cuCv,
     vazutiGrup,
     contactatiCand,
     cuOfertaCand,
     contAng,
+    emailAng,
     profAng,
     cuCui,
     cuPost,
@@ -137,6 +139,7 @@ export default async function AdminStatisticiPage() {
     prisma.user.count({ where: { ultimaActivitate: { gte: de7 } } }),
 
     prisma.user.count({ where: { role: "CANDIDATE" } }),
+    prisma.user.count({ where: { role: "CANDIDATE", emailVerificat: true } }),
     prisma.candidateProfile.count(),
     prisma.candidateProfile.count({ where: { cvFiles: { some: {} } } }),
     prisma.profileView.groupBy({ by: ["candidateId"] }),
@@ -144,6 +147,7 @@ export default async function AdminStatisticiPage() {
     prisma.candidateProfile.count({ where: { conversations: { some: { offers: { some: {} } } } } }),
 
     prisma.user.count({ where: { role: "EMPLOYER" } }),
+    prisma.user.count({ where: { role: "EMPLOYER", emailVerificat: true } }),
     prisma.employerProfile.count(),
     prisma.employerProfile.count({ where: { NOT: { cui: null } } }),
     prisma.employerProfile.count({ where: { posturi: { some: {} } } }),
@@ -301,6 +305,7 @@ export default async function AdminStatisticiPage() {
           <Funnel
             pasi={[
               { eticheta: t("stats.fCandAccounts"), n: contCand },
+              { eticheta: t("stats.fEmailConfirmed"), n: emailCand },
               { eticheta: t("stats.fCandProfile"), n: profCand },
               { eticheta: t("stats.fCandCv"), n: cuCv },
               { eticheta: t("stats.fCandViewed"), n: vazutiGrup.length },
@@ -314,6 +319,7 @@ export default async function AdminStatisticiPage() {
           <Funnel
             pasi={[
               { eticheta: t("stats.fEmpAccounts"), n: contAng },
+              { eticheta: t("stats.fEmailConfirmed"), n: emailAng },
               { eticheta: t("stats.fEmpProfile"), n: profAng },
               { eticheta: t("stats.fEmpCui"), n: cuCui },
               { eticheta: t("stats.fEmpPost"), n: cuPost },

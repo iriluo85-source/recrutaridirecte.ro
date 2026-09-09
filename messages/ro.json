@@ -837,7 +837,8 @@
       "unresolvedReports": "Rapoarte nerezolvate",
       "pendingTestimonials": "Testimoniale în așteptare",
       "profileViews": "Vizualizări profil",
-      "cvDownloads": "Descărcări CV"
+      "cvDownloads": "Descărcări CV",
+      "fEmailConfirmed": "Email confirmat"
     }
   },
   "footer": {

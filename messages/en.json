@@ -837,7 +837,8 @@
       "unresolvedReports": "Unresolved reports",
       "pendingTestimonials": "Pending testimonials",
       "profileViews": "Profile views",
-      "cvDownloads": "CV downloads"
+      "cvDownloads": "CV downloads",
+      "fEmailConfirmed": "Email confirmed"
     }
   },
   "footer": {
