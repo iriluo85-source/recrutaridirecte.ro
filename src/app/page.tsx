@@ -7,7 +7,6 @@ import { alegeSlideAleator } from "@/lib/hero";
 import { SELECT_DIRECTOR, companiiActive, filtreazaCompanii } from "@/lib/companii";
 import Avatar from "@/components/Avatar";
 import BannerBackToSchool from "@/components/BannerBackToSchool";
-import { oraseCuCandidati, slugOras } from "@/lib/disponibili";
 
 export default async function Home({
   searchParams,
@@ -37,23 +36,6 @@ export default async function Home({
     {}
   );
   const companiiPreview = companiiDirector.slice(0, 5);
-
-  // Dovada pentru un patron care intră direct pe site: câți oameni, în ce orașe.
-  const oraseDisponibile = oraseCuCandidati(
-    (
-      await prisma.candidateProfile.findMany({
-        select: {
-          locatie: true,
-          remote: true,
-          aniExperienta: true,
-          salariuMinim: true,
-          permisConducere: true,
-          dispusDeplasari: true,
-          skills: { select: { skill: { select: { nume: true } } } },
-        },
-      })
-    ).map((c) => ({ ...c, skills: c.skills.map((x) => x.skill.nume) }))
-  ).slice(0, 4);
 
   // ---- date pentru dashboard (utilizatori logați) ----
   let candDash: { hasProfile: boolean; pending: number; accepted: number; rejected: number } | null = null;
@@ -221,7 +203,7 @@ export default async function Home({
 
       {/* Propunerea pentru angajatori, pentru cine intră direct pe site.
           Ascunsă celor logați — ei au deja meniul lor. */}
-      {!session && oraseDisponibile.length > 0 && (
+      {!session && (
         <section className="border-b border-line bg-surface/40">
           <div className="mx-auto max-w-5xl px-6 py-10">
             <p className="text-xs font-semibold uppercase tracking-wider text-accent">
@@ -229,19 +211,6 @@ export default async function Home({
             </p>
             <h2 className="mt-2 text-2xl font-semibold sm:text-3xl">{t("employerBandTitle")}</h2>
             <p className="mt-2 max-w-2xl text-muted">{t("employerBandDesc")}</p>
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              {oraseDisponibile.map((o) => (
-                <Link
-                  key={o.oras}
-                  href={`/disponibili/oras/${slugOras(o.oras)}`}
-                  className="inline-flex items-baseline gap-2 rounded-lg border border-line bg-surface px-3.5 py-2 text-sm transition hover:border-accent"
-                >
-                  <span className="font-semibold">{o.candidati}</span>
-                  <span className="text-muted">{o.oras}</span>
-                </Link>
-              ))}
-            </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <Link href="/disponibili" className="btn-primary">
